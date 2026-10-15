@@ -3,37 +3,87 @@
 import React, { useState } from 'react';
 
 export default function LotesPage() {
-  // Datos base exigidos por el reto
-  const lotesBase = [
-    { id: 'CAC001', productor: 'Productor A', origen: 'Rivera', cantidad: '100 kg', estado: 'Liberado' },
+  // Datos base iniciales
+  const [lotes, setLotes] = useState([
+    { id: 'CAC001', productor: 'Productor A', origen: 'Rivera', cantidad: 100, unidad: 'kg', estado: 'Liberado' },
     { id: 'CAC002', productor: 'Productor B', origen: 'Campoalegre', cantidad: '150 kg', estado: 'Pendiente' },
     { id: 'CAC003', productor: 'Productor C', origen: 'Algeciras', cantidad: '80 kg', estado: 'Bloqueado' },
-  ];
+  ]);
 
-  // Estados para controlar los filtros seleccionados
+  // Estados para filtros
   const [origenFiltro, setOrigenFiltro] = useState('Todos');
   const [estadoFiltro, setEstadoFiltro] = useState('Todos');
 
-  // Filtrar los lotes según lo seleccionado por el usuario
-  const lotesFiltrados = lotesBase.filter((lote) => {
-    const coincideOrigen = origenFiltro === 'Todos' || lote.origen === origenFiltro;
-    const coincideEstado = estadoFiltro === 'Todos' || lote.estado === estadoFiltro;
+  // Estado para controlar si el modal del formulario está abierto o cerrado
+  const [modalAbierto, setModalAbierto] = useState(false);
+
+  // Estados para los campos del nuevo lote
+  const [nuevoProductor, setNuevoProductor] = useState('');
+  const [nuevoOrigen, setNuevoOrigen] = useState('Rivera');
+  const [nuevaCantidad, setNuevaCantidad] = useState('');
+  const [errorValidacion, setErrorValidacion] = useState('');
+
+  // Función para manejar el envío del formulario con validaciones estrictas
+  const handleCrearLote = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validación 1: Campos vacíos
+    if (!nuevoProductor.trim() || !nuevaCantidad) {
+      setErrorValidacion('Todos los campos son obligatorios.');
+      return;
+    }
+
+    // Validación 2: Cantidad mayor a 0 (RF01)
+    const cantidadNumerica = parseFloat(nuevaCantidad);
+    if (isNaN(cantidadNumerica) || cantidadNumerica <= 0) {
+      setErrorValidacion('La cantidad inicial debe ser mayor a 0.');
+      return;
+    }
+
+    // Si pasa las validaciones, creamos el nuevo lote
+    const idGenerado = `CAC00${lotes.length + 1}`;
+    const loteNuevo = {
+      id: idGenerado,
+      productor: nuevoProductor,
+      origen: nuevoOrigen,
+      cantidad: `${cantidadNumerica} kg`,
+      estado: 'Pendiente', // Por defecto nace como pendiente
+    };
+
+    setLotes([loteNuevo, ...lotes]);
+
+    // Limpiar formulario y cerrar modal
+    setNuevoProductor('');
+    setNuevaCantidad('');
+    setErrorValidacion('');
+    setModalAbierto(false);
+  };
+
+  // Filtrado de lotes
+  const lotesFiltrados = lotes.filter((lote) => {
+    const origenStr = typeof lote.origen === 'string' ? lote.origen : '';
+    const estadoStr = typeof lote.estado === 'string' ? lote.estado : '';
+    
+    const coincideOrigen = origenFiltro === 'Todos' || origenStr === origenFiltro;
+    const coincideEstado = estadoFiltro === 'Todos' || estadoStr === estadoFiltro;
     return coincideOrigen && coincideEstado;
   });
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
+    <div className="p-8 max-w-4xl mx-auto relative">
       <h1 className="text-2xl font-bold mb-1">Gestión y Trazabilidad de Lotes de Cacao</h1>
       <p className="mb-6 text-gray-600">Asociación Cacaotera del Huila</p>
       
-      {/* Barra de Acciones y Filtros */}
+      {/* Botón y Filtros */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-        <button className="bg-green-600 text-white font-medium px-4 py-2 rounded shadow hover:bg-green-700 transition-colors">
+        <button 
+          onClick={() => setModalAbierto(true)}
+          className="bg-green-600 text-white font-medium px-4 py-2 rounded shadow hover:bg-green-700 transition-colors"
+        >
           + Recibir Nuevo Lote
         </button>
 
         <div className="flex flex-wrap gap-3">
-          {/* Filtro por Origen */}
           <div>
             <label className="block text-xs font-semibold text-gray-500 mb-1">Filtrar Origen:</label>
             <select 
@@ -48,7 +98,6 @@ export default function LotesPage() {
             </select>
           </div>
 
-          {/* Filtro por Estado */}
           <div>
             <label className="block text-xs font-semibold text-gray-500 mb-1">Filtrar Estado:</label>
             <select 
@@ -105,6 +154,78 @@ export default function LotesPage() {
           </tbody>
         </table>
       </div>
+
+      {/* VENTANA MODAL DEL FORMULARIO */}
+      {modalAbierto && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-md w-full p-6 shadow-xl">
+            <h2 className="text-xl font-bold mb-4 text-gray-800">Recibir Nuevo Lote de Cacao</h2>
+            
+            {errorValidacion && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 text-sm rounded">
+                {errorValidacion}
+              </div>
+            )}
+
+            <form onSubmit={handleCrearLote}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre del Productor:</label>
+                <input 
+                  type="text" 
+                  value={nuevoProductor}
+                  onChange={(e) => setNuevoProductor(e.target.value)}
+                  placeholder="Ej. Juan Pérez"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Municipio de Origen:</label>
+                <select 
+                  value={nuevoOrigen}
+                  onChange={(e) => setNuevoOrigen(e.target.value)}
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                >
+                  <option value="Rivera">Rivera</option>
+                  <option value="Campoalegre">Campoalegre</option>
+                  <option value="Algeciras">Algeciras</option>
+                </select>
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Cantidad Inicial (kg):</label>
+                <input 
+                  type="number" 
+                  step="any"
+                  value={nuevaCantidad}
+                  onChange={(e) => setNuevaCantidad(e.target.value)}
+                  placeholder="Ej. 120"
+                  className="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setModalAbierto(false);
+                    setErrorValidacion('');
+                  }}
+                  className="px-4 py-2 border border-gray-300 rounded text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  Cancelar
+                </button>
+                <button 
+                  type="submit"
+                  className="px-4 py-2 bg-green-600 text-white rounded text-sm hover:bg-green-700 shadow"
+                >
+                  Guardar Lote
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
