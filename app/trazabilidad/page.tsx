@@ -1,22 +1,17 @@
-import { getFichaPublicaAction, getLoteIdsPublicAction } from "@/app/actions/trazabilidad";
+import React, { Suspense } from "react";
 import TrazabilidadClient from "./TrazabilidadClient";
 
-export default async function TrazabilidadPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ lote?: string }>;
-}) {
-  const resolvedParams = await searchParams;
-  const ids = await getLoteIdsPublicAction();
-  // Si no se especifica lote en la URL, seleccionar el último lote creado (o CAC001)
-  const requestedLote = (resolvedParams?.lote || ids[ids.length - 1] || "CAC001").trim().toUpperCase();
-  const initialFicha = await getFichaPublicaAction(requestedLote);
-
+export default function TrazabilidadPage() {
   return (
-    <TrazabilidadClient
-      initialLoteId={requestedLote}
-      initialFicha={initialFicha}
-      listaLotes={ids}
-    />
+    <Suspense
+      fallback={
+        <div className="max-w-4xl mx-auto px-4 py-16 text-center text-slate-500 dark:text-slate-400 space-y-3">
+          <div className="animate-spin text-3xl">🌱</div>
+          <p className="text-sm font-semibold">Cargando sistema de trazabilidad...</p>
+        </div>
+      }
+    >
+      <TrazabilidadClient />
+    </Suspense>
   );
 }

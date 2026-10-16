@@ -1,30 +1,23 @@
 "use client";
 
-import React, { useState, useEffect, useTransition } from "react";
-import { getFichaPublicaAction, FichaPublicaDTO } from "@/app/actions/trazabilidad";
+import React, { useState, useEffect, useTransition, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
+import { getFichaPublicaAction, getLoteIdsPublicAction, FichaPublicaDTO } from "@/app/actions/trazabilidad";
 
-interface TrazabilidadClientProps {
-  initialLoteId: string;
-  initialFicha: FichaPublicaDTO | null;
-  listaLotes: string[];
-}
+export default function TrazabilidadClient() {
+  const searchParams = useSearchParams();
+  const paramLote = searchParams.get("lote")?.trim().toUpperCase();
 
-export default function TrazabilidadClient({
-  initialLoteId,
-  initialFicha,
-  listaLotes: lotesIniciales,
-}: TrazabilidadClientProps) {
-  const [codigoBusqueda, setCodigoBusqueda] = useState(initialLoteId);
-  const [ficha, setFicha] = useState<FichaPublicaDTO | null>(initialFicha);
-  const [buscado, setBuscado] = useState(true);
+  const [codigoBusqueda, setCodigoBusqueda] = useState(paramLote || "CAC004");
+  const [ficha, setFicha] = useState<FichaPublicaDTO | null>(null);
+  const [cargando, setCargando] = useState(true);
+  const [buscado, setBuscado] = useState(false);
   const [linkCopiado, setLinkCopiado] = useState(false);
   const [hostOrigin, setHostOrigin] = useState("http://192.168.1.229:3000");
-  const [listaLotes, setListaLotes] = useState<string[]>(lotesIniciales);
+  const [listaLotes, setListaLotes] = useState<string[]>(["CAC001", "CAC002", "CAC003", "CAC004"]);
   const [isPending, startTransition] = useTransition();
 
-  const activeLoteId = ficha?.lote_id || initialLoteId;
-
-  const consultarLote = (codigo: string) => {
+  const consultarLote = useCallback((codigo: string) => {
     const cod = (codigo || "").trim().toUpperCase();
     if (!cod) return;
     setCodigoBusqueda(cod);
@@ -35,22 +28,37 @@ export default function TrazabilidadClient({
     }
     startTransition(async () => {
       try {
+        setCargando(true);
         const data = await getFichaPublicaAction(cod);
         setFicha(data);
       } catch (err) {
         console.error("Error al consultar lote:", err);
       } finally {
+        setCargando(false);
         setBuscado(true);
       }
     });
-  };
+  }, []);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
       setHostOrigin(isLocal ? "http://192.168.1.229:3000" : window.location.origin);
     }
-  }, []);
+
+    getLoteIdsPublicAction().then((ids) => {
+      if (ids && ids.length > 0) {
+        setListaLotes(ids);
+        // Si hay lote en la URL, consultar ese; de lo contrario, consultar el último lote
+        const target = paramLote || ids[ids.length - 1];
+        consultarLote(target);
+      } else {
+        consultarLote(paramLote || "CAC004");
+      }
+    });
+  }, [paramLote, consultarLote]);
+
+  const activeLoteId = ficha?.lote_id || codigoBusqueda;
 
   // Enlace para código QR (acceso móvil por Wi-Fi)
   const qrMobileUrl = `${hostOrigin}/trazabilidad?lote=${activeLoteId}`;
@@ -94,10 +102,10 @@ export default function TrazabilidadClient({
           />
           <button
             type="submit"
-            disabled={isPending}
+            disabled={isPending || cargando}
             className="min-h-[44px] bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition disabled:opacity-50 text-sm flex items-center justify-center gap-2 active:scale-95"
           >
-            <span>🔍</span> {isPending ? "Buscando..." : "Consultar"}
+            <span>🔍</span> {isPending || cargando ? "Buscando..." : "Consultar"}
           </button>
         </form>
 
@@ -108,7 +116,6 @@ export default function TrazabilidadClient({
               key={ej}
               type="button"
               onClick={() => {
-                setCodigoBusqueda(ej);
                 consultarLote(ej);
               }}
               className={`text-xs font-bold px-3 py-1.5 rounded-xl transition border min-h-[36px] active:scale-95 ${
@@ -124,7 +131,12 @@ export default function TrazabilidadClient({
       </div>
 
       {/* Ficha de Trazabilidad */}
-      {ficha ? (
+      {cargando && !ficha ? (
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-8 text-center text-slate-400">
+          <div className="animate-spin text-2xl mb-2">🌱</div>
+          <p className="text-sm font-semibold">Cargando lote {activeLoteId}...</p>
+        </div>
+      ) : ficha ? (
         <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden space-y-0">
           {/* Banner Superior Ficha */}
           <div
