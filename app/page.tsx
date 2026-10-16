@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useUser, SignInButton, UserButton } from "@clerk/nextjs";
-import { getLotesAction, LoteConInventario } from "@/app/actions/lotes";
 import Link from "next/link";
+import { useUser, SignInButton } from "@clerk/nextjs";
+import { getLotesAction, LoteConInventario } from "@/app/actions/lotes";
+import { getTransformacionesAction } from "@/app/actions/transformaciones";
 
 export default function HomePage() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -11,198 +12,178 @@ export default function HomePage() {
   const userEmail = user?.primaryEmailAddress?.emailAddress;
 
   const [lotes, setLotes] = useState<LoteConInventario[]>([]);
+  const [totalTransformaciones, setTotalTransformaciones] = useState(0);
   const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
-    getLotesAction()
-      .then((data) => {
-        setLotes(data);
+    Promise.all([getLotesAction(), getTransformacionesAction()])
+      .then(([lotesData, transfData]) => {
+        setLotes(lotesData);
+        setTotalTransformaciones(transfData.length);
       })
-      .catch((err) => console.error("Error al cargar lotes:", err))
+      .catch((err) => console.error("Error al cargar datos del dashboard:", err))
       .finally(() => setCargando(false));
   }, []);
 
-  const totalKilos = lotes.reduce((acc, l) => acc + Number(l.cantidad_disponible || l.cantidad_inicial), 0);
+  const totalKilos = lotes.reduce(
+    (acc, l) => acc + Number(l.cantidad_disponible || l.cantidad_inicial),
+    0
+  );
 
   return (
-    <div className="min-h-screen bg-stone-100 text-stone-900 font-sans">
-      {/* Barra de navegación superior */}
-      <header className="bg-stone-900 text-white shadow-md border-b border-amber-900/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <span className="text-2xl">🍫</span>
-            <div>
-              <h1 className="text-lg font-bold tracking-tight text-amber-100">
-                Asociación Cacaotera del Huila
-              </h1>
-              <p className="text-xs text-stone-400">
-                Sistema de Trazabilidad, Mermas y Costos • Reto Agroindustria
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            {!isLoaded ? (
-              <span className="text-xs text-stone-400">Cargando sesión...</span>
-            ) : isSignedIn ? (
-              <div className="flex items-center space-x-3">
-                <div className="hidden sm:flex flex-col text-right">
-                  <span className="text-xs text-stone-300 font-medium">{userEmail}</span>
-                  <span className="text-xs inline-flex items-center justify-end font-semibold text-amber-400">
-                    Rol: {role.toUpperCase()}
-                  </span>
-                </div>
-                <UserButton />
-              </div>
-            ) : (
-              <SignInButton mode="modal">
-                <button className="bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow transition">
-                  Iniciar Sesión
-                </button>
-              </SignInButton>
-            )}
-          </div>
-        </div>
-      </header>
-
-      {/* Contenido principal */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-        {/* Banner de Estado del Usuario */}
-        <section className="bg-white rounded-xl p-6 shadow-sm border border-stone-200">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-800">
-                  Base de Datos Supabase Conectada
-                </span>
-                <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-amber-100 text-amber-800">
-                  Clerk Auth Activo
-                </span>
-              </div>
-              <h2 className="text-2xl font-bold text-stone-900">
-                Panel de Control de Trazabilidad
-              </h2>
-              <p className="text-sm text-stone-600 mt-1">
-                {isSignedIn ? (
-                  <>
-                    Has iniciado sesión como <strong className="text-stone-900">{userEmail}</strong> con rol{" "}
-                    <span className="font-semibold text-amber-700 uppercase">[{role}]</span>.
-                  </>
-                ) : (
-                  "Estás navegando en modo Comprador / Público. Inicia sesión para acceder a las operaciones de la planta."
-                )}
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              <Link
-                href="/lotes"
-                className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow transition flex items-center gap-1.5"
-              >
-                📦 Módulo de Lotes →
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* Tarjetas de Resumen en Tiempo Real desde Supabase */}
-        <section className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-stone-200">
-            <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
-              Total Cacao en Bodega
-            </p>
-            <p className="text-3xl font-extrabold text-stone-900 mt-1">
-              {cargando ? "..." : `${totalKilos} kg`}
-            </p>
-            <p className="text-xs text-stone-500 mt-2">
-              Existencia real consolidada (RF08)
-            </p>
-          </div>
-
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-stone-200">
-            <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
-              Lotes Registrados
-            </p>
-            <p className="text-3xl font-extrabold text-stone-900 mt-1">
-              {cargando ? "..." : lotes.length}
-            </p>
-            <p className="text-xs text-stone-500 mt-2">
-              Almacenados en PostgreSQL (RF07)
-            </p>
-          </div>
-
-          <div className="bg-white rounded-xl p-5 shadow-sm border border-stone-200">
-            <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
-              Estado de Seguridad
-            </p>
-            <p className="text-xl font-bold text-emerald-700 mt-1">
-              RLS + Auditoría Activa
-            </p>
-            <p className="text-xs text-stone-500 mt-2">
-              Historial inmutable de cambios (RF10)
-            </p>
-          </div>
-        </section>
-
-        {/* Lista de Lotes Leída en Vivo desde Postgres */}
-        <section className="bg-white rounded-xl p-6 shadow-sm border border-stone-200">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold text-stone-900">
-              Lotes Activos en Base de Datos (Supabase)
-            </h3>
-            <span className="text-xs text-stone-500">
-              Datos persistentes en la nube
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      {/* Banner Principal / Hero con Estilo Huila */}
+      <div className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-green-900 rounded-3xl p-8 md:p-12 text-white shadow-xl relative overflow-hidden border border-emerald-800/40">
+        <div className="relative z-10 space-y-4 max-w-3xl">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="bg-emerald-800/80 text-emerald-200 text-xs font-bold px-3 py-1 rounded-full border border-emerald-600/50 uppercase tracking-wider">
+              Hackathon Agroindustria • Cacao Huilense
+            </span>
+            <span className="bg-amber-500/20 text-amber-300 text-xs font-bold px-3 py-1 rounded-full border border-amber-500/40">
+              ⚡ Supabase + Clerk Activos
             </span>
           </div>
 
-          {cargando ? (
-            <div className="p-8 text-center text-stone-400 text-sm">
-              Consultando base de datos en Supabase...
+          <h1 className="text-3xl md:text-5xl font-black tracking-tight leading-tight">
+            Sistema Digital de Trazabilidad de Cacao
+          </h1>
+
+          <p className="text-emerald-100 text-sm md:text-base leading-relaxed">
+            Garantizando la transparencia, trazabilidad de origen y calidad del cacao fino y de aroma del Huila
+            (<strong>Rivera, Campoalegre y Algeciras</strong>) desde la finca cacaotera hasta la barra de chocolate.
+          </p>
+
+          <div className="pt-2 flex flex-wrap gap-3">
+            <Link
+              href="/lotes"
+              className="bg-white text-emerald-950 font-bold px-5 py-2.5 rounded-xl shadow-md hover:bg-emerald-50 transition text-sm flex items-center gap-1.5"
+            >
+              <span>📦</span> Gestionar Lotes
+            </Link>
+
+            <Link
+              href="/transformaciones"
+              className="bg-emerald-700 hover:bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-xl border border-emerald-500 shadow-md transition text-sm flex items-center gap-1.5"
+            >
+              <span>⚙️</span> Nueva Transformación
+            </Link>
+
+            <Link
+              href="/trazabilidad"
+              className="bg-emerald-950/60 hover:bg-emerald-950 text-emerald-200 font-bold px-5 py-2.5 rounded-xl border border-emerald-700/60 transition text-sm flex items-center gap-1.5"
+            >
+              <span>🔍</span> Consulta Pública (QR)
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Tarjetas de Métricas en Tiempo Real (Desde Supabase) */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-200 space-y-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
+            Lotes Registrados en Bodega
+          </span>
+          <div className="text-3xl font-black text-gray-900">
+            {cargando ? "..." : `${lotes.length} Lotes`}
+          </div>
+          <p className="text-xs text-emerald-700 font-semibold">📍 Rivera, Campoalegre y Algeciras</p>
+        </div>
+
+        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-200 space-y-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
+            Existencia Disponible en Granos
+          </span>
+          <div className="text-3xl font-black text-gray-900">
+            {cargando ? "..." : `${totalKilos} kg`}
+          </div>
+          <p className="text-xs text-gray-500 font-medium">Balance en tiempo real con inventario (RF08)</p>
+        </div>
+
+        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-200 space-y-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
+            Transformaciones Ejecutadas
+          </span>
+          <div className="text-3xl font-black text-gray-900">
+            {cargando ? "..." : `${totalTransformaciones} Procesos`}
+          </div>
+          <p className="text-xs text-emerald-700 font-semibold">✓ Con auditoría inmutable (RF10)</p>
+        </div>
+      </div>
+
+      {/* Estado de Sesión y Acceso Rápido */}
+      {isLoaded && !isSignedIn && (
+        <div className="bg-emerald-50 border border-emerald-200 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="space-y-1">
+            <h3 className="font-extrabold text-emerald-950 text-base">
+              ¿Eres operador de planta o administrador de la asociación?
+            </h3>
+            <p className="text-xs text-emerald-800">
+              Inicia sesión con Clerk para registrar recepciones de lotes, controlar mermas y gestionar estados.
+            </p>
+          </div>
+          <SignInButton mode="modal">
+            <button className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition">
+              Iniciar Sesión con Clerk
+            </button>
+          </SignInButton>
+        </div>
+      )}
+
+      {/* Módulos Principales del Sistema */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold text-gray-900">Módulos del Sistema</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Link
+            href="/lotes"
+            className="group bg-white p-6 rounded-3xl shadow-sm border border-gray-200 hover:border-emerald-500 hover:shadow-md transition duration-200 space-y-3"
+          >
+            <div className="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-700 font-bold text-lg">
+              📦
             </div>
-          ) : lotes.length === 0 ? (
-            <div className="p-8 text-center text-stone-400 text-sm">
-              No hay lotes registrados aún.
+            <h3 className="text-base font-extrabold text-gray-900 group-hover:text-emerald-700 transition">
+              Recepción y Lotes (RF01)
+            </h3>
+            <p className="text-xs text-gray-600 leading-relaxed">
+              Registro de lotes entrantes con ID único, validación de cantidades estrictamente mayores a 0 kg y
+              control de municipios cacaoteros del Huila.
+            </p>
+          </Link>
+
+          <Link
+            href="/transformaciones"
+            className="group bg-white p-6 rounded-3xl shadow-sm border border-gray-200 hover:border-emerald-500 hover:shadow-md transition duration-200 space-y-3"
+          >
+            <div className="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-700 font-bold text-lg">
+              ⚙️
             </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {lotes.map((lote) => (
-                <div
-                  key={lote.id}
-                  className="p-4 rounded-lg border border-stone-200 bg-stone-50 flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono font-bold text-base text-stone-900">
-                        {lote.id}
-                      </span>
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                          lote.estado === "liberado"
-                            ? "bg-emerald-100 text-emerald-800"
-                            : lote.estado === "bloqueado"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-amber-100 text-amber-800"
-                        }`}
-                      >
-                        {lote.estado.toUpperCase()}
-                      </span>
-                    </div>
-                    <p className="text-xs text-stone-600 mt-1">
-                      <strong>Origen:</strong> {lote.origen} • {lote.productor}
-                    </p>
-                  </div>
-                  <div className="mt-3 pt-2 border-t border-stone-200 flex justify-between items-center text-xs">
-                    <span className="text-stone-500">Disponible:</span>
-                    <span className="font-bold text-stone-900">
-                      {lote.cantidad_disponible} kg
-                    </span>
-                  </div>
-                </div>
-              ))}
+            <h3 className="text-base font-extrabold text-gray-900 group-hover:text-emerald-700 transition">
+              Transformaciones y Mermas (RF02 / RF04)
+            </h3>
+            <p className="text-xs text-gray-600 leading-relaxed">
+              Seguimiento a fermentación, secado y tostado con cálculo automático de mermas, alertas cuando superan
+              el 15.0% y costeo unitario.
+            </p>
+          </Link>
+
+          <Link
+            href="/trazabilidad"
+            className="group bg-white p-6 rounded-3xl shadow-sm border border-gray-200 hover:border-emerald-500 hover:shadow-md transition duration-200 space-y-3"
+          >
+            <div className="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-700 font-bold text-lg">
+              🔍
             </div>
-          )}
-        </section>
-      </main>
+            <h3 className="text-base font-extrabold text-gray-900 group-hover:text-emerald-700 transition">
+              Consulta Pública (RF06 / QR)
+            </h3>
+            <p className="text-xs text-gray-600 leading-relaxed">
+              Ficha pública accesible por consumidores y compradores por código o QR sin revelar datos privados ni
+              costos internos de producción.
+            </p>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
