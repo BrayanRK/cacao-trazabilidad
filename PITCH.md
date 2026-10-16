@@ -20,34 +20,40 @@ flowchart LR
 
 ---
 
-### ⏱️ MINUTO 1 (0:00 - 1:00): Portada y El Problema Real del Huila
-👤 **Habla:** Samuel Chantre  
-🖥️ **En pantalla:** Diapositiva 1 (Portada) y Diapositiva 2 (Planteamiento del Dolor)
+### ⏱️ MINUTO 1 (0:00 - 1:00): ¿Qué hace el software? (Presentación Oficial)
+👤 **Habla:** Samuel Chantre *(Lo que ya se sabe de memoria al 100%)*  
+🖥️ **En pantalla:** Diapositiva 1 (Portada de syntax_error)
 
-> *"Buenos días, jurados y evaluadores. Somos el equipo **syntax_error** (Brayan Gasca, David Laverde y Samuel Chantre).
+> *"Buenos días, jurados y evaluadores. Somos el equipo **syntax_error** (Samuel Chantre, David Laverde y Brayan Gasca).
 > 
-> Nuestro departamento del Huila, en municipios como **Rivera, Campoalegre y Algeciras**, produce uno de los mejores cacaos finos de aroma del mundo. Sin embargo, los centros de acopio campesinos siguen operando exactamente igual que hace 50 años: **con cuadernos y libretas de papel**.
+> Nuestro software se llama **Cacao Trazabilidad Huila**: es una plataforma web moderna, segura y 100% responsiva (Mobile-First), diseñada para operar tanto en computadores de oficina como en los celulares de los operarios en los centros de acopio.
 > 
-> Esto genera tres dolores críticos que destruyen la economía de nuestros campesinos:
-> 1. **Informalidad ciega:** Se reciben bultos en baba y los registros en papel se traspapelan, manchan o pierden, impidiendo cualquier control de auditoría.
-> 2. **Pérdidas descontroladas de peso:** En fermentación y secado el cacao pierde hasta un 20% de merma física. Hoy nadie sabe si esa pérdida fue por calor, descomposición o robo.
-> 3. **Pérdida de hasta el 35% de sobreprecio:** Como las cooperativas no pueden certificar ante compradores internacionales que su grano es 100% huilense y de calidad, se lo compran a precio corriente estándar, perdiendo miles de millones de pesos."*
+> **¿Qué hace exactamente el software?**
+> Digitaliza y custodia todo el viaje del cacao huilense desde que el campesino entrega el grano fresco en baba hasta el comprador final. Registra la entrada de materia prima con identificadores únicos por lote, supervisa en tiempo real las pérdidas de peso en fermentación y secado, calcula el costo unitario de producción por kilogramo y genera un certificado digital con código QR para que cualquier persona en el mundo verifique su origen y calidad.
+> 
+> Y para entender el dolor real que esto resuelve en el Huila y ver el software funcionando en vivo, los dejo con mi compañero Brayan Gasca."*
 
 ---
 
-### ⏱️ MINUTO 2 (1:00 - 2:00): Cómo lo resuelve el software
-👤 **Habla:** Samuel Chantre  
-🖥️ **En pantalla:** Diapositiva 2 (hacia Diapositiva 3)
+### ⏱️ MINUTO 2 (1:00 - 2:00): El Dolor del Huila y Cómo lo Resolvemos
+👤 **Habla:** Brayan Gasca  
+🖥️ **En pantalla:** Diapositiva 2 (El Dolor de la Post-Cosecha)
 
-> *"Para resolver esta problemática creamos **Cacao Trazabilidad Huila**: una plataforma web moderna, segura y Mobile-First diseñada para correr tanto en la computadora de la cooperativa como en los celulares de los operarios en los centros de acopio sin importar la conectividad.
+> *"¿Por qué esto resuelve el dolor del Huila?
+> El Huila, y especialmente municipios como **Rivera, Campoalegre y Algeciras**, produce cacao fino de aroma de talla mundial. Sin embargo, los centros de acopio campesinos siguen operando en cuadernos y libretas de papel. Esto genera tres problemas graves:
 > 
-> **¿Qué hace exactamente nuestro sistema?**
-> * **Digitaliza la recepción** registrando lotes con identificador único por municipio y cumpliendo con Habeas Data para proteger la identidad de nuestros productores.
-> * **Controla en tiempo real las mermas** activando alertas rojas automáticas cuando la pérdida supera el 15% técnico permitido.
-> * **Calcula el costo unitario real (\$ COP/kg)** para saber con exactitud cuánto cuesta transformar cada kilo y fijar precios comerciales justos.
-> * **Genera un Certificado Digital con Código QR** para que cualquier comprador en Europa o Estados Unidos verifique en 5 segundos el origen huilense del grano.
+> 1. **Pérdidas a ciegas:** El grano pierde peso en fermentación y secado sin control; nadie sabe si fue por calor, hongos o descuido.
+> 2. **Ventas a pérdida:** Las asociaciones no saben cuánto les cuesta procesar un kilo de cacao seco y venden al ojo.
+> 3. **Pérdida de ingresos:** Los campesinos **pierden hasta un 35% de sobreprecio** en mercados de exportación porque no tienen cómo demostrar que su cacao es 100% huilense y de calidad.
 > 
-> A continuación, mi compañero Brayan Gasca les mostrará la plataforma operando en vivo."*
+> **¿Cómo lo resuelve nuestra plataforma?**
+> 1. Elimina los papeles centralizando el inventario en la nube.
+> 2. Dispara alertas automáticas si la merma supera el 15% técnico permitido.
+> 3. Calcula el costo exacto por kilo (\$ COP/kg) para fijar precios rentables.
+> 4. Permite aislar y bloquear lotes de mala calidad para que no contaminen la bodega.
+> 5. Emite un certificado de trazabilidad con QR para recuperar ese 35% de sobreprecio.
+> 
+> Veámoslo ahora mismo en vivo en el sistema:"*
 
 ---
 
