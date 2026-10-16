@@ -1,8 +1,15 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
+}
+
+.dark {
+  --background: #090d16;
+  --foreground: #f8fafc;
 }
 
 body {
@@ -12,7 +19,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Forzar legibilidad perfecta en inputs y selects independiente del tema del sistema */
+/* Forzar legibilidad perfecta en inputs y selects según modo */
 input, select, textarea {
   color: #0f172a !important;
   background-color: #ffffff !important;
@@ -21,4 +28,15 @@ input, select, textarea {
 select option {
   color: #0f172a !important;
   background-color: #ffffff !important;
+}
+
+.dark input, .dark select, .dark textarea {
+  color: #f8fafc !important;
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+
+.dark select option {
+  color: #f8fafc !important;
+  background-color: #1e293b !important;
 }

@@ -80,50 +80,50 @@ export default function HomePage() {
 
       {/* Tarjetas de Métricas en Tiempo Real (Desde Supabase) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-200 space-y-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
             Lotes Registrados en Bodega
           </span>
-          <div className="text-3xl font-black text-gray-900">
+          <div className="text-3xl font-black text-slate-900 dark:text-white">
             {cargando ? "..." : `${lotes.length} Lotes`}
           </div>
-          <p className="text-xs text-emerald-700 font-semibold">📍 Rivera, Campoalegre y Algeciras</p>
+          <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">📍 Rivera, Campoalegre y Algeciras</p>
         </div>
 
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-200 space-y-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
             Existencia Disponible en Granos
           </span>
-          <div className="text-3xl font-black text-gray-900">
+          <div className="text-3xl font-black text-slate-900 dark:text-white">
             {cargando ? "..." : `${totalKilos} kg`}
           </div>
-          <p className="text-xs text-gray-500 font-medium">Balance en tiempo real con inventario (RF08)</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">Balance en tiempo real con inventario (RF08)</p>
         </div>
 
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-200 space-y-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 space-y-2">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
             Transformaciones Ejecutadas
           </span>
-          <div className="text-3xl font-black text-gray-900">
+          <div className="text-3xl font-black text-slate-900 dark:text-white">
             {cargando ? "..." : `${totalTransformaciones} Procesos`}
           </div>
-          <p className="text-xs text-emerald-700 font-semibold">✓ Con auditoría inmutable (RF10)</p>
+          <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">✓ Con auditoría inmutable (RF10)</p>
         </div>
       </div>
 
       {/* Estado de Sesión y Acceso Rápido */}
       {isLoaded && !isSignedIn && (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800 rounded-3xl p-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="space-y-1">
-            <h3 className="font-extrabold text-emerald-950 text-base">
+            <h3 className="font-extrabold text-emerald-950 dark:text-emerald-200 text-base">
               ¿Eres operador de planta o administrador de la asociación?
             </h3>
-            <p className="text-xs text-emerald-800">
+            <p className="text-xs text-emerald-800 dark:text-emerald-300">
               Inicia sesión con Clerk para registrar recepciones de lotes, controlar mermas y gestionar estados.
             </p>
           </div>
           <SignInButton mode="modal">
-            <button className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition">
+            <button className="bg-emerald-700 hover:bg-emerald-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition">
               Iniciar Sesión con Clerk
             </button>
           </SignInButton>
@@ -132,20 +132,20 @@ export default function HomePage() {
 
       {/* Módulos Principales del Sistema */}
       <div className="space-y-4">
-        <h2 className="text-xl font-bold text-gray-900">Módulos del Sistema</h2>
+        <h2 className="text-xl font-bold text-slate-900 dark:text-white">Módulos del Sistema</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Link
             href="/lotes"
-            className="group bg-white p-6 rounded-3xl shadow-sm border border-gray-200 hover:border-emerald-500 hover:shadow-md transition duration-200 space-y-3"
+            className="group bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 hover:shadow-md transition duration-200 space-y-3"
           >
-            <div className="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-700 font-bold text-lg">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 flex items-center justify-center text-emerald-700 dark:text-emerald-400 font-bold text-lg">
               📦
             </div>
-            <h3 className="text-base font-extrabold text-gray-900 group-hover:text-emerald-700 transition">
+            <h3 className="text-base font-extrabold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">
               Recepción y Lotes (RF01)
             </h3>
-            <p className="text-xs text-gray-600 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               Registro de lotes entrantes con ID único, validación de cantidades estrictamente mayores a 0 kg y
               control de municipios cacaoteros del Huila.
             </p>
@@ -153,15 +153,15 @@ export default function HomePage() {
 
           <Link
             href="/transformaciones"
-            className="group bg-white p-6 rounded-3xl shadow-sm border border-gray-200 hover:border-emerald-500 hover:shadow-md transition duration-200 space-y-3"
+            className="group bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 hover:shadow-md transition duration-200 space-y-3"
           >
-            <div className="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-700 font-bold text-lg">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 flex items-center justify-center text-emerald-700 dark:text-emerald-400 font-bold text-lg">
               ⚙️
             </div>
-            <h3 className="text-base font-extrabold text-gray-900 group-hover:text-emerald-700 transition">
+            <h3 className="text-base font-extrabold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">
               Transformaciones y Mermas (RF02 / RF04)
             </h3>
-            <p className="text-xs text-gray-600 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               Seguimiento a fermentación, secado y tostado con cálculo automático de mermas, alertas cuando superan
               el 15.0% y costeo unitario.
             </p>
@@ -169,15 +169,15 @@ export default function HomePage() {
 
           <Link
             href="/trazabilidad"
-            className="group bg-white p-6 rounded-3xl shadow-sm border border-gray-200 hover:border-emerald-500 hover:shadow-md transition duration-200 space-y-3"
+            className="group bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 hover:shadow-md transition duration-200 space-y-3"
           >
-            <div className="w-10 h-10 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-700 font-bold text-lg">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 flex items-center justify-center text-emerald-700 dark:text-emerald-400 font-bold text-lg">
               🔍
             </div>
-            <h3 className="text-base font-extrabold text-gray-900 group-hover:text-emerald-700 transition">
+            <h3 className="text-base font-extrabold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">
               Consulta Pública (RF06 / QR)
             </h3>
-            <p className="text-xs text-gray-600 leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
               Ficha pública accesible por consumidores y compradores por código o QR sin revelar datos privados ni
               costos internos de producción.
             </p>

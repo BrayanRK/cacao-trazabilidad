@@ -162,41 +162,137 @@ export default function LotesPage() {
     return coincideOrigen && coincideEstado;
   });
 
+  const totalLotes = lotes.length;
+  const totalDisponible = lotes.reduce((acc, l) => acc + Number(l.cantidad_disponible || 0), 0);
+  const lotesBloqueados = lotes.filter((l) => l.estado === "bloqueado").length;
+  const municipiosActivos = new Set(lotes.map((l) => l.origen)).size;
+
+  const renderBadge = (estado: string) => {
+    if (estado === "liberado") {
+      return (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-50 text-emerald-800 border border-emerald-200 dark:bg-emerald-950/80 dark:text-emerald-300 dark:border-emerald-700/60 shadow-sm">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          LIBERADO
+        </span>
+      );
+    }
+    if (estado === "bloqueado") {
+      return (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-red-50 text-red-800 border border-red-200 dark:bg-red-950/80 dark:text-red-300 dark:border-red-700/60 shadow-sm">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
+          </span>
+          BLOQUEADO
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/80 dark:text-amber-300 dark:border-amber-700/60 shadow-sm">
+        <span className="w-2 h-2 rounded-full bg-amber-500" />
+        PENDIENTE
+      </span>
+    );
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 space-y-6">
       {/* Encabezado */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-5">
         <div>
-          <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200/80 px-2.5 py-1 rounded-full uppercase tracking-wider">
+          <span className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/80 border border-emerald-200/80 dark:border-emerald-700/60 px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
             Inventario & Trazabilidad (RF01 / RF08 / RF09)
           </span>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-2.5 tracking-tight">
             Gestión de Lotes de Cacao
           </h1>
-          <p className="text-xs sm:text-sm text-slate-600 mt-1">
+          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-1">
             Asociación de Productores del Huila (Rivera, Campoalegre y Algeciras)
           </p>
         </div>
 
         <button
           onClick={() => setModalRecepcionAbierto(true)}
-          className="bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold px-4 py-2.5 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2 text-xs sm:text-sm self-stretch sm:self-auto min-h-[44px]"
+          className="bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-bold px-5 py-2.5 rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-xs sm:text-sm self-stretch sm:self-auto min-h-[44px]"
         >
           <span>➕</span> Recibir Nuevo Lote
         </button>
       </div>
 
+      {/* Tarjetas KPI Ejecutivas AgroTech */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group hover:border-emerald-500/50 transition">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Lotes en Acopio
+            </span>
+            <span className="text-xl">📦</span>
+          </div>
+          <p className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1">
+            {totalLotes} <span className="text-xs font-bold text-slate-400">lotes</span>
+          </p>
+          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 mt-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Trazados al 100%
+          </span>
+        </div>
+
+        <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group hover:border-emerald-500/50 transition">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Cacao Disponible
+            </span>
+            <span className="text-xl">⚖️</span>
+          </div>
+          <p className="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400 mt-1">
+            {totalDisponible} <span className="text-xs font-bold text-slate-400">kg</span>
+          </p>
+          <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 mt-1 block">
+            Saldo real en bodega (RF08)
+          </span>
+        </div>
+
+        <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group hover:border-red-500/50 transition">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Filtro Calidad (RF09)
+            </span>
+            <span className="text-xl">🛡️</span>
+          </div>
+          <p className="text-2xl sm:text-3xl font-black text-red-600 dark:text-red-400 mt-1">
+            {lotesBloqueados} <span className="text-xs font-bold text-slate-400">en cuarentena</span>
+          </p>
+          <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-red-600 dark:text-red-400 mt-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-ping" /> Protección fitosanitaria
+          </span>
+        </div>
+
+        <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm relative overflow-hidden group hover:border-amber-500/50 transition">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Municipios Activos
+            </span>
+            <span className="text-xl">📍</span>
+          </div>
+          <p className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1">
+            {municipiosActivos} <span className="text-xs font-bold text-slate-400">zonas</span>
+          </p>
+          <span className="text-[11px] font-medium text-amber-600 dark:text-amber-400 mt-1 block truncate">
+            Rivera, Campoalegre, Algeciras
+          </span>
+        </div>
+      </div>
+
       {/* Barra de Filtros */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between">
+      <div className="bg-white dark:bg-slate-900 p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row gap-4 items-stretch sm:items-center justify-between">
         <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3 items-center">
           <div>
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
+            <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">
               Origen:
             </label>
             <select
               value={origenFiltro}
               onChange={(e) => setOrigenFiltro(e.target.value)}
-              className="w-full sm:w-auto border border-slate-200 rounded-xl px-3 py-2 text-xs bg-white font-medium text-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none"
+              className="w-full sm:w-auto border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs bg-white dark:bg-slate-800 font-medium text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 outline-none"
             >
               <option value="Todos">Todos</option>
               <option value="Rivera">Rivera</option>
@@ -206,13 +302,13 @@ export default function LotesPage() {
           </div>
 
           <div>
-            <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
+            <label className="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wide mb-1">
               Estado:
             </label>
             <select
               value={estadoFiltro}
               onChange={(e) => setEstadoFiltro(e.target.value)}
-              className="w-full sm:w-auto border border-slate-200 rounded-xl px-3 py-2 text-xs bg-white font-medium text-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none"
+              className="w-full sm:w-auto border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-xs bg-white dark:bg-slate-800 font-medium text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-emerald-500 outline-none"
             >
               <option value="Todos">Todos</option>
               <option value="liberado">Liberados</option>
@@ -224,7 +320,7 @@ export default function LotesPage() {
 
         <button
           onClick={cargarLotes}
-          className="text-xs text-slate-500 hover:text-emerald-700 font-semibold flex items-center justify-center gap-1.5 py-1.5 transition self-end sm:self-center"
+          className="text-xs text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 font-bold flex items-center justify-center gap-1.5 py-1.5 transition self-end sm:self-center"
         >
           <span>🔄</span> Actualizar
         </button>
@@ -233,172 +329,146 @@ export default function LotesPage() {
       {/* VISTA 1: Tarjetas táctiles en Celular (< md) */}
       <div className="block md:hidden space-y-3">
         {cargando ? (
-          <div className="p-8 text-center text-slate-500 bg-white rounded-2xl border border-slate-200 text-sm">
+          <div className="p-8 text-center text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 text-sm">
             Cargando lotes en tiempo real...
           </div>
         ) : lotesFiltrados.length > 0 ? (
-          lotesFiltrados.map((lote) => {
-            const estadoBadge =
-              lote.estado === "liberado"
-                ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                : lote.estado === "pendiente"
-                ? "bg-amber-50 text-amber-800 border-amber-200"
-                : "bg-red-50 text-red-800 border-red-200";
+          lotesFiltrados.map((lote) => (
+            <div
+              key={lote.id}
+              className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3"
+            >
+              {/* Cabecera Tarjeta Móvil */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="font-extrabold text-base text-slate-900 dark:text-white tracking-tight">
+                    {lote.id}
+                  </span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">📍 {lote.origen}</span>
+                </div>
 
-            return (
-              <div
-                key={lote.id}
-                className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm space-y-3"
-              >
-                {/* Cabecera Tarjeta Móvil */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="font-extrabold text-base text-slate-900 tracking-tight">
-                      {lote.id}
-                    </span>
-                    <span className="text-xs text-slate-500">📍 {lote.origen}</span>
-                  </div>
+                {renderBadge(lote.estado)}
+              </div>
 
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-[11px] font-bold border uppercase tracking-wider ${estadoBadge}`}
-                  >
-                    {lote.estado}
+              {/* Métricas Principales */}
+              <div className="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-xs">
+                <div>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-400 font-semibold block uppercase">Productor</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-100 truncate block">{lote.productor}</span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-400 font-semibold block uppercase">Saldo Disponible</span>
+                  <span className="font-extrabold text-emerald-600 dark:text-emerald-400 text-sm block">
+                    {lote.cantidad_disponible} kg
                   </span>
                 </div>
-
-                {/* Métricas Principales */}
-                <div className="grid grid-cols-2 gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100 text-xs">
-                  <div>
-                    <span className="text-[10px] text-slate-400 font-semibold block uppercase">Productor</span>
-                    <span className="font-bold text-slate-800 truncate block">{lote.productor}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 font-semibold block uppercase">Saldo Disponible</span>
-                    <span className="font-extrabold text-emerald-700 text-sm block">
-                      {lote.cantidad_disponible} kg
-                    </span>
-                  </div>
-                </div>
-
-                {lote.motivo_estado && (
-                  <p className="text-[11px] text-slate-500 italic bg-slate-50/50 p-2 rounded-lg border border-slate-100">
-                    Motivo: {lote.motivo_estado}
-                  </p>
-                )}
-
-                {/* Botones Táctiles Móvil */}
-                <div className="flex gap-2 pt-1">
-                  {userRole === "admin" && (
-                    <button
-                      onClick={() => {
-                        setLoteSeleccionado(lote);
-                        setNuevoEstado(lote.estado === "bloqueado" ? "liberado" : "bloqueado");
-                        setMotivoEstado("");
-                        setErrorEstado("");
-                        setModalEstadoAbierto(true);
-                      }}
-                      className="flex-1 min-h-[40px] text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-2 rounded-xl transition flex items-center justify-center gap-1 active:scale-95"
-                    >
-                      🛡️ Estado
-                    </button>
-                  )}
-                  <Link
-                    href={`/trazabilidad`}
-                    className="flex-1 min-h-[40px] text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold px-3 py-2 rounded-xl transition flex items-center justify-center gap-1 active:scale-95"
-                  >
-                    🔍 Ficha
-                  </Link>
-                </div>
               </div>
-            );
-          })
+
+              {lote.motivo_estado && (
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 italic bg-slate-50/50 dark:bg-slate-800/40 p-2.5 rounded-lg border border-slate-100 dark:border-slate-800">
+                  Motivo: {lote.motivo_estado}
+                </p>
+              )}
+
+              {/* Botones Táctiles Móvil */}
+              <div className="flex gap-2 pt-1">
+                {userRole === "admin" && (
+                  <button
+                    onClick={() => {
+                      setLoteSeleccionado(lote);
+                      setNuevoEstado(lote.estado === "bloqueado" ? "liberado" : "bloqueado");
+                      setMotivoEstado("");
+                      setErrorEstado("");
+                      setModalEstadoAbierto(true);
+                    }}
+                    className="flex-1 min-h-[42px] text-xs bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 transition flex items-center justify-center gap-1 active:scale-95"
+                  >
+                    🛡️ Estado
+                  </button>
+                )}
+                <Link
+                  href={`/trazabilidad`}
+                  className="flex-1 min-h-[42px] text-xs bg-emerald-50 dark:bg-emerald-950/80 hover:bg-emerald-100 dark:hover:bg-emerald-900 text-emerald-800 dark:text-emerald-200 font-bold px-3 py-2 rounded-xl border border-emerald-200 dark:border-emerald-800 transition flex items-center justify-center gap-1 active:scale-95"
+                >
+                  🔍 Ficha
+                </Link>
+              </div>
+            </div>
+          ))
         ) : (
-          <div className="p-8 text-center text-slate-500 bg-white rounded-2xl border border-slate-200 text-sm">
+          <div className="p-8 text-center text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 text-sm">
             No se encontraron lotes con los filtros seleccionados.
           </div>
         )}
       </div>
 
       {/* VISTA 2: Tabla de Datos en Computador (>= md) */}
-      <div className="hidden md:block bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="hidden md:block bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
-            <thead className="bg-slate-900 text-white text-xs uppercase tracking-wider">
+            <thead className="bg-slate-900 dark:bg-slate-950 text-white text-xs uppercase tracking-wider border-b border-slate-800">
               <tr>
-                <th className="p-3.5">ID Lote</th>
-                <th className="p-3.5">Productor</th>
-                <th className="p-3.5">Origen</th>
-                <th className="p-3.5">Cantidad Inicial</th>
-                <th className="p-3.5">Saldo Disponible (RF08)</th>
-                <th className="p-3.5">Estado (RF09)</th>
-                <th className="p-3.5 text-right">Acciones</th>
+                <th className="p-4">ID Lote</th>
+                <th className="p-4">Productor</th>
+                <th className="p-4">Origen</th>
+                <th className="p-4">Cantidad Inicial</th>
+                <th className="p-4">Saldo Disponible (RF08)</th>
+                <th className="p-4">Estado (RF09)</th>
+                <th className="p-4 text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-sm">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80 text-sm">
               {cargando ? (
                 <tr>
-                  <td colSpan={7} className="p-8 text-center text-slate-500">
+                  <td colSpan={7} className="p-8 text-center text-slate-500 dark:text-slate-400">
                     Cargando inventario en tiempo real desde Supabase...
                   </td>
                 </tr>
               ) : lotesFiltrados.length > 0 ? (
-                lotesFiltrados.map((lote) => {
-                  const estadoBadge =
-                    lote.estado === "liberado"
-                      ? "bg-emerald-50 text-emerald-800 border-emerald-200"
-                      : lote.estado === "pendiente"
-                      ? "bg-amber-50 text-amber-800 border-amber-200"
-                      : "bg-red-50 text-red-800 border-red-200";
-
-                  return (
-                    <tr key={lote.id} className="hover:bg-slate-50/70 transition">
-                      <td className="p-3.5 font-extrabold text-slate-900">{lote.id}</td>
-                      <td className="p-3.5 font-medium text-slate-800">{lote.productor}</td>
-                      <td className="p-3.5 text-slate-600">📍 {lote.origen}</td>
-                      <td className="p-3.5 text-slate-600">{lote.cantidad_inicial} kg</td>
-                      <td className="p-3.5 font-extrabold text-emerald-700">
-                        {lote.cantidad_disponible} kg
-                      </td>
-                      <td className="p-3.5">
-                        <span
-                          className={`px-2.5 py-0.5 rounded-full text-xs font-bold border uppercase tracking-wider ${estadoBadge}`}
+                lotesFiltrados.map((lote) => (
+                  <tr key={lote.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition">
+                    <td className="p-4 font-extrabold text-slate-900 dark:text-white">{lote.id}</td>
+                    <td className="p-4 font-medium text-slate-800 dark:text-slate-200">{lote.productor}</td>
+                    <td className="p-4 text-slate-600 dark:text-slate-400">📍 {lote.origen}</td>
+                    <td className="p-4 text-slate-600 dark:text-slate-400">{lote.cantidad_inicial} kg</td>
+                    <td className="p-4 font-black text-emerald-600 dark:text-emerald-400 text-base">
+                      {lote.cantidad_disponible} kg
+                    </td>
+                    <td className="p-4">
+                      {renderBadge(lote.estado)}
+                      {lote.motivo_estado && (
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 max-w-xs truncate" title={lote.motivo_estado}>
+                          {lote.motivo_estado}
+                        </p>
+                      )}
+                    </td>
+                    <td className="p-4 text-right space-x-2">
+                      {userRole === "admin" && (
+                        <button
+                          onClick={() => {
+                            setLoteSeleccionado(lote);
+                            setNuevoEstado(lote.estado === "bloqueado" ? "liberado" : "bloqueado");
+                            setMotivoEstado("");
+                            setErrorEstado("");
+                            setModalEstadoAbierto(true);
+                          }}
+                          className="text-xs bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 transition shadow-sm active:scale-95"
                         >
-                          {lote.estado}
-                        </span>
-                        {lote.motivo_estado && (
-                          <p className="text-[11px] text-slate-500 mt-1 max-w-xs truncate" title={lote.motivo_estado}>
-                            {lote.motivo_estado}
-                          </p>
-                        )}
-                      </td>
-                      <td className="p-3.5 text-right space-x-2">
-                        {userRole === "admin" && (
-                          <button
-                            onClick={() => {
-                              setLoteSeleccionado(lote);
-                              setNuevoEstado(lote.estado === "bloqueado" ? "liberado" : "bloqueado");
-                              setMotivoEstado("");
-                              setErrorEstado("");
-                              setModalEstadoAbierto(true);
-                            }}
-                            className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-lg transition"
-                          >
-                            🛡️ Cambiar Estado
-                          </button>
-                        )}
-                        <Link
-                          href={`/trazabilidad`}
-                          className="text-xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold px-3 py-1.5 rounded-lg transition inline-block"
-                        >
-                          🔍 Ficha
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })
+                          🛡️ Cambiar Estado
+                        </button>
+                      )}
+                      <Link
+                        href={`/trazabilidad`}
+                        className="text-xs bg-emerald-50 dark:bg-emerald-950/80 hover:bg-emerald-100 dark:hover:bg-emerald-900 text-emerald-800 dark:text-emerald-200 font-bold px-3 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-800 transition shadow-sm active:scale-95 inline-block"
+                      >
+                        🔍 Ficha
+                      </Link>
+                    </td>
+                  </tr>
+                ))
               ) : (
                 <tr>
-                  <td colSpan={7} className="p-8 text-center text-slate-500">
+                  <td colSpan={7} className="p-8 text-center text-slate-500 dark:text-slate-400">
                     No se encontraron lotes con los filtros seleccionados.
                   </td>
                 </tr>
@@ -410,43 +480,43 @@ export default function LotesPage() {
 
       {/* MODAL 1: Recepción de Nuevo Lote (RF01) */}
       {modalRecepcionAbierto && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
-              <h2 className="text-lg font-extrabold text-slate-900">Recibir Nuevo Lote (RF01)</h2>
+        <div className="fixed inset-0 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <h2 className="text-lg font-extrabold text-slate-900 dark:text-white">Recibir Nuevo Lote (RF01)</h2>
               <button
                 onClick={() => setModalRecepcionAbierto(false)}
-                className="text-slate-400 hover:text-slate-600 font-bold p-1 text-base"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 font-bold p-1 text-base"
               >
                 ✕
               </button>
             </div>
 
             {errorRecepcion && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl font-medium">
+              <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/80 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-xs rounded-xl font-medium">
                 ⚠️ {errorRecepcion}
               </div>
             )}
 
             <form onSubmit={handleCrearLote} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Nombre del Productor:</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Nombre del Productor:</label>
                 <input
                   type="text"
                   required
                   value={productor}
                   onChange={(e) => setProductor(e.target.value)}
                   placeholder="Ej. Carlos Ortiz"
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 bg-white"
+                  className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 dark:text-white bg-white dark:bg-slate-800"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Municipio de Origen (Huila):</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Municipio de Origen (Huila):</label>
                 <select
                   value={origen}
                   onChange={(e) => setOrigen(e.target.value)}
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm bg-white focus:ring-2 focus:ring-emerald-500 outline-none font-medium text-slate-900"
+                  className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm bg-white dark:bg-slate-800 focus:ring-2 focus:ring-emerald-500 outline-none font-medium text-slate-900 dark:text-white"
                 >
                   <option value="Rivera">Rivera</option>
                   <option value="Campoalegre">Campoalegre</option>
@@ -455,7 +525,7 @@ export default function LotesPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Cantidad Inicial Recibida (kg):</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Cantidad Inicial Recibida (kg):</label>
                 <input
                   type="number"
                   step="any"
@@ -463,18 +533,18 @@ export default function LotesPage() {
                   value={cantidad}
                   onChange={(e) => setCantidad(e.target.value)}
                   placeholder="Ej. 120 (estrictamente > 0)"
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 bg-white"
+                  className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 dark:text-white bg-white dark:bg-slate-800"
                 />
-                <p className="text-[11px] text-slate-500 mt-1">
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
                   El lote nace en estado <strong>Pendiente</strong> con trazabilidad y auditoría inmutable.
                 </p>
               </div>
 
-              <div className="flex justify-end gap-3 pt-3 border-t border-slate-100">
+              <div className="flex justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setModalRecepcionAbierto(false)}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+                  className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition"
                 >
                   Cancelar
                 </button>
@@ -493,33 +563,33 @@ export default function LotesPage() {
 
       {/* MODAL 2: Cambio de Estado y Bloqueo (RF09 - Solo Admin / Incidente Hora 12) */}
       {modalEstadoAbierto && loteSeleccionado && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
-            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
-              <h2 className="text-lg font-extrabold text-slate-900">
+        <div className="fixed inset-0 bg-slate-900/60 dark:bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-white dark:bg-slate-900 rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <h2 className="text-lg font-extrabold text-slate-900 dark:text-white">
                 Control de Estado: {loteSeleccionado.id} (RF09)
               </h2>
               <button
                 onClick={() => setModalEstadoAbierto(false)}
-                className="text-slate-400 hover:text-slate-600 font-bold p-1 text-base"
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 font-bold p-1 text-base"
               >
                 ✕
               </button>
             </div>
 
             {errorEstado && (
-              <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl font-medium">
+              <div className="mb-4 p-3 bg-red-50 dark:bg-red-950/80 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-xs rounded-xl font-medium">
                 ⚠️ {errorEstado}
               </div>
             )}
 
             <form onSubmit={handleCambiarEstado} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">Nuevo Estado:</label>
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Nuevo Estado:</label>
                 <select
                   value={nuevoEstado}
                   onChange={(e) => setNuevoEstado(e.target.value as "pendiente" | "liberado" | "bloqueado")}
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm bg-white font-bold text-slate-900 focus:ring-2 focus:ring-emerald-500 outline-none"
+                  className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm bg-white dark:bg-slate-800 font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 outline-none"
                 >
                   <option value="liberado">Liberado (Apto para procesos y venta)</option>
                   <option value="pendiente">Pendiente (En espera de control de calidad)</option>
@@ -528,7 +598,7 @@ export default function LotesPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
+                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                   Motivo Detallado del Cambio (Obligatorio - RF09):
                 </label>
                 <textarea
@@ -537,15 +607,15 @@ export default function LotesPage() {
                   value={motivoEstado}
                   onChange={(e) => setMotivoEstado(e.target.value)}
                   placeholder="Ej. Incidencia fitosanitaria por exceso de humedad detectada en fermentación (mínimo 5 caracteres)."
-                  className="w-full border border-slate-200 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 bg-white"
+                  className="w-full border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 dark:text-white bg-white dark:bg-slate-800"
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-3 border-t border-slate-100">
+              <div className="flex justify-end gap-3 pt-3 border-t border-slate-100 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setModalEstadoAbierto(false)}
-                  className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl transition"
+                  className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition"
                 >
                   Cancelar
                 </button>

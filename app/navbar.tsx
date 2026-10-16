@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton, useUser, SignInButton } from "@clerk/nextjs";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -67,7 +68,8 @@ export default function Navbar() {
           </nav>
 
           {/* Sección de Usuario / Autenticación */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <ThemeToggle />
             {isLoaded && (
               <>
                 {isSignedIn ? (

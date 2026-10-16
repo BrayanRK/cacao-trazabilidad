@@ -29,9 +29,28 @@ export default function RootLayout({
     <ClerkProvider>
       <html
         lang="es"
+        suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen antialiased`}
       >
-        <body className="min-h-screen flex flex-col bg-slate-50 text-slate-900">
+        <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                try {
+                  const t = localStorage.getItem('cacao-theme');
+                  if (t === 'light') {
+                    document.documentElement.classList.remove('dark');
+                  } else {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch (_) {
+                  document.documentElement.classList.add('dark');
+                }
+              `,
+            }}
+          />
+        </head>
+        <body className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
           <Navbar />
           <main className="flex-1 pb-16 md:pb-0">{children}</main>
           <BottomNav />
