@@ -26,7 +26,7 @@ export default function HomePage() {
   }, []);
 
   const totalKilos = lotes.reduce(
-    (acc, l) => acc + Number(l.cantidad_disponible || l.cantidad_inicial),
+    (acc, l) => acc + Number(l.cantidad_disponible ?? 0),
     0
   );
 
