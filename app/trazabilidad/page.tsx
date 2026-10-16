@@ -29,44 +29,44 @@ export default function TrazabilidadPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
       {/* Encabezado */}
-      <div className="border-b border-gray-200 pb-5">
-        <span className="text-xs font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full uppercase tracking-wider">
+      <div className="border-b border-slate-200 pb-4">
+        <span className="text-[11px] font-bold text-emerald-800 bg-emerald-100 px-3 py-1 rounded-full uppercase tracking-wider border border-emerald-200">
           Ficha Pública Segura (RF06 / QR)
         </span>
-        <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900 mt-2">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2 tracking-tight">
           Consulta Pública de Trazabilidad
         </h1>
-        <p className="text-sm text-gray-600 mt-1">
-          Transparencia y origen del cacao del Huila (Rivera, Campoalegre y Algeciras) de la finca al consumidor
+        <p className="text-xs sm:text-sm text-slate-600 mt-1">
+          Transparencia y origen del cacao del Huila (Rivera, Campoalegre y Algeciras) de la finca al consumidor.
         </p>
       </div>
 
       {/* Buscador de Lote */}
-      <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm space-y-3">
-        <label className="block text-xs font-bold text-gray-700 uppercase tracking-wide">
+      <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+        <label className="block text-xs font-bold text-slate-700 uppercase tracking-wide">
           Consultar por Código de Lote o Escaneo QR:
         </label>
-        <form onSubmit={handleBuscar} className="flex gap-3">
+        <form onSubmit={handleBuscar} className="flex flex-col sm:flex-row gap-2 sm:gap-3">
           <input
             type="text"
             value={codigoBusqueda}
             onChange={(e) => setCodigoBusqueda(e.target.value)}
             placeholder="Ej. CAC001, CAC002, CAC003..."
-            className="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 text-sm font-bold uppercase focus:ring-2 focus:ring-emerald-500 outline-none"
+            className="flex-1 border border-slate-200 rounded-xl px-4 py-2.5 text-sm font-bold uppercase focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 bg-white"
           />
           <button
             type="submit"
             disabled={isPending}
-            className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition disabled:opacity-50 text-sm flex items-center gap-2"
+            className="min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-sm transition disabled:opacity-50 text-sm flex items-center justify-center gap-2 active:scale-95"
           >
             <span>🔍</span> {isPending ? "Buscando..." : "Consultar"}
           </button>
         </form>
 
-        <div className="flex gap-2 pt-1 items-center">
-          <span className="text-xs text-gray-400">Acceso rápido:</span>
+        <div className="flex flex-wrap gap-2 pt-1 items-center">
+          <span className="text-xs text-slate-400 font-medium">Acceso rápido:</span>
           {["CAC001", "CAC002", "CAC003"].map((ej) => (
             <button
               key={ej}
@@ -75,7 +75,7 @@ export default function TrazabilidadPage() {
                 setCodigoBusqueda(ej);
                 consultarLote(ej);
               }}
-              className="text-xs bg-gray-100 hover:bg-emerald-100 hover:text-emerald-800 text-gray-700 font-bold px-2.5 py-1 rounded-lg transition"
+              className="text-xs bg-slate-100 hover:bg-emerald-50 hover:text-emerald-800 text-slate-700 font-bold px-3 py-1.5 rounded-xl transition border border-slate-200 min-h-[36px] active:scale-95"
             >
               {ej}
             </button>
@@ -85,10 +85,10 @@ export default function TrazabilidadPage() {
 
       {/* Ficha de Trazabilidad */}
       {ficha ? (
-        <div className="bg-white rounded-3xl border border-gray-200 shadow-xl overflow-hidden">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-0">
           {/* Banner Superior Ficha */}
           <div
-            className={`p-6 sm:p-8 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${
+            className={`p-5 sm:p-6 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${
               ficha.estado === "bloqueado"
                 ? "bg-gradient-to-r from-red-800 to-rose-900"
                 : ficha.estado === "liberado"
@@ -97,10 +97,10 @@ export default function TrazabilidadPage() {
             }`}
           >
             <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-emerald-200/80">
+              <span className="text-[11px] font-bold uppercase tracking-widest text-emerald-200/90">
                 Ficha Oficial de Cacao Huilense
               </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold mt-1 tracking-tight">{ficha.lote_id}</h2>
+              <h2 className="text-2xl sm:text-3xl font-extrabold mt-0.5 tracking-tight">{ficha.lote_id}</h2>
               <p className="text-xs text-emerald-100/90 mt-1 font-medium">
                 Municipio de Origen: 📍 {ficha.origen}, Huila
               </p>
@@ -131,10 +131,10 @@ export default function TrazabilidadPage() {
             </div>
           </div>
 
-          {/* Alerta si está bloqueado (Hora 12) */}
+          {/* Alerta si está bloqueado (Hora 12 / RF09) */}
           {ficha.estado === "bloqueado" && (
             <div className="p-4 bg-red-50 border-b border-red-200 text-red-800 text-xs font-semibold flex items-center gap-2">
-              <span>⚠️</span>
+              <span className="text-base">⚠️</span>
               <span>
                 Este lote ha sido <strong>BLOQUEADO PREVENTIVAMENTE</strong> por control de calidad. No se
                 encuentra disponible para distribución comercial ni consumo (RF09).
@@ -143,65 +143,65 @@ export default function TrazabilidadPage() {
           )}
 
           {/* Contenido Ficha */}
-          <div className="p-6 sm:p-8 space-y-8">
+          <div className="p-5 sm:p-6 space-y-6">
             {/* Origen Agrícola */}
             <div>
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
+              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
                 Información de Origen Agrícola
               </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-50 p-5 rounded-2xl border border-gray-100">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
                 <div>
-                  <p className="text-[11px] text-gray-500 font-medium">Productor</p>
-                  <p className="text-sm font-extrabold text-gray-900 mt-0.5">{ficha.productor}</p>
+                  <p className="text-[10px] text-slate-400 uppercase font-semibold">Productor</p>
+                  <p className="text-sm font-extrabold text-slate-900 mt-0.5 truncate">{ficha.productor}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-gray-500 font-medium">Ubicación</p>
-                  <p className="text-sm font-extrabold text-gray-900 mt-0.5">{ficha.origen}, Huila</p>
+                  <p className="text-[10px] text-slate-400 uppercase font-semibold">Ubicación</p>
+                  <p className="text-sm font-extrabold text-slate-900 mt-0.5">📍 {ficha.origen}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-gray-500 font-medium">Volumen Recibido</p>
-                  <p className="text-sm font-extrabold text-gray-900 mt-0.5">
+                  <p className="text-[10px] text-slate-400 uppercase font-semibold">Volumen Recibido</p>
+                  <p className="text-sm font-extrabold text-slate-900 mt-0.5">
                     {ficha.cantidad_inicial} {ficha.unidad}
                   </p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-gray-500 font-medium">Fecha de Recepción</p>
-                  <p className="text-sm font-extrabold text-gray-900 mt-0.5">
+                  <p className="text-[10px] text-slate-400 uppercase font-semibold">Fecha de Recepción</p>
+                  <p className="text-sm font-extrabold text-slate-900 mt-0.5">
                     {new Date(ficha.fecha_recepcion).toLocaleDateString("es-CO")}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Línea de Transformación */}
+            {/* Línea de Transformación Post-Cosecha */}
             <div>
-              <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
+              <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
                 Línea de Tiempo del Proceso Post-Cosecha
               </h3>
 
               {ficha.etapas_proceso.length > 0 ? (
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   {ficha.etapas_proceso.map((p, idx) => (
                     <div
                       key={idx}
-                      className="flex items-start gap-4 p-4 rounded-2xl bg-gray-50 border border-gray-100"
+                      className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-100"
                     >
-                      <div className="w-8 h-8 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+                      <div className="w-7 h-7 rounded-lg bg-emerald-700 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
                         {idx + 1}
                       </div>
                       <div className="flex-1 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
                         <div>
-                          <h4 className="text-sm font-extrabold text-gray-900">{p.etapa}</h4>
-                          <span className="text-xs text-gray-500">
+                          <h4 className="text-sm font-extrabold text-slate-900">{p.etapa}</h4>
+                          <span className="text-[11px] text-slate-500">
                             Registrado el {new Date(p.fecha).toLocaleDateString("es-CO")}
                           </span>
                         </div>
                         {p.merma_pct !== undefined && (
                           <span
-                            className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
+                            className={`text-xs font-bold px-2.5 py-0.5 rounded-full self-start sm:self-auto border ${
                               p.alerta_merma
-                                ? "bg-red-100 text-red-800"
-                                : "bg-emerald-100 text-emerald-800"
+                                ? "bg-red-50 text-red-800 border-red-200"
+                                : "bg-emerald-50 text-emerald-800 border-emerald-200"
                             }`}
                           >
                             Merma: {p.merma_pct}%
@@ -212,26 +212,23 @@ export default function TrazabilidadPage() {
                   ))}
                 </div>
               ) : (
-                <div className="p-5 rounded-2xl bg-gray-50 border border-gray-100 text-center text-xs text-gray-500">
-                  Este lote se encuentra en recepción inicial. Las etapas de fermentación y secado aún no han sido
-                  registradas.
+                <div className="p-4 rounded-xl bg-slate-50 border border-slate-100 text-center text-xs text-slate-500">
+                  Este lote se encuentra en recepción inicial. Las etapas de fermentación y secado aún no han sido registradas.
                 </div>
               )}
             </div>
 
             {/* Privacidad de Costos (RF06) */}
-            <div className="bg-emerald-50/60 p-4 rounded-2xl border border-emerald-200/60 text-[11px] text-emerald-900 flex items-center gap-2">
-              <span>🔒</span>
-              <span>
-                <strong>Privacidad de Datos (RF06):</strong> Esta ficha es de acceso público para consumidores y
-                compradores. Por política de seguridad, los costos internos y márgenes comerciales no son
-                expuestos públicamente.
-              </span>
+            <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-xs text-emerald-950 flex items-start gap-2.5">
+              <span className="text-base leading-none">🔒</span>
+              <p>
+                <strong>Privacidad Comercial (RF06):</strong> Esta ficha es pública para compradores y consumidores finales. Los costos unitarios internos y márgenes comerciales de la cooperativa se mantienen estrictamente confidenciales.
+              </p>
             </div>
           </div>
         </div>
       ) : buscado ? (
-        <div className="p-8 text-center bg-white border border-gray-200 rounded-3xl text-gray-500">
+        <div className="p-8 text-center bg-white border border-slate-200 rounded-2xl text-slate-500 text-sm">
           No se encontró ningún lote registrado con el código <strong>{codigoBusqueda}</strong>.
         </div>
       ) : null}
