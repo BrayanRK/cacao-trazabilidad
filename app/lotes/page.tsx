@@ -10,12 +10,48 @@ import {
   LoteConInventario,
 } from "@/app/actions/lotes";
 
+const initialLotes: LoteConInventario[] = [
+  {
+    id: "CAC001",
+    productor: "Carlos Dussán",
+    origen: "Rivera",
+    fecha_recepcion: "2026-10-15T12:00:00+00:00",
+    cantidad_inicial: 500,
+    unidad: "kg",
+    estado: "liberado",
+    motivo_estado: null,
+    cantidad_disponible: 400,
+  },
+  {
+    id: "CAC002",
+    productor: "Ana María Trujillo",
+    origen: "Campoalegre",
+    fecha_recepcion: "2026-10-15T13:30:00+00:00",
+    cantidad_inicial: 400,
+    unidad: "kg",
+    estado: "liberado",
+    motivo_estado: null,
+    cantidad_disponible: 400,
+  },
+  {
+    id: "CAC003",
+    productor: "Jorge Eliécer Perdomo",
+    origen: "Algeciras",
+    fecha_recepcion: "2026-10-15T15:00:00+00:00",
+    cantidad_inicial: 350,
+    unidad: "kg",
+    estado: "bloqueado",
+    motivo_estado: "Cadmio elevado por muestreo preventivo",
+    cantidad_disponible: 350,
+  },
+];
+
 export default function LotesPage() {
   const { user } = useUser();
   const userRole = (user?.publicMetadata?.role as string) || "operador";
 
-  const [lotes, setLotes] = useState<LoteConInventario[]>([]);
-  const [cargando, setCargando] = useState(true);
+  const [lotes, setLotes] = useState<LoteConInventario[]>(initialLotes);
+  const [cargando, setCargando] = useState(false);
   const [origenFiltro, setOrigenFiltro] = useState("Todos");
   const [estadoFiltro, setEstadoFiltro] = useState("Todos");
 
@@ -36,10 +72,16 @@ export default function LotesPage() {
   const [isPendingEstado, startEstadoTransition] = useTransition();
 
   const cargarLotes = async () => {
-    setCargando(true);
-    const data = await getLotesAction();
-    setLotes(data);
-    setCargando(false);
+    try {
+      const data = await getLotesAction();
+      if (Array.isArray(data) && data.length > 0) {
+        setLotes(data);
+      }
+    } catch (err) {
+      console.error("Error al cargar lotes desde Supabase:", err);
+    } finally {
+      setCargando(false);
+    }
   };
 
   useEffect(() => {

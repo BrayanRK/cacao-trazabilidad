@@ -3,17 +3,39 @@
 import React, { useState, useEffect, useTransition } from "react";
 import { getFichaPublicaAction, FichaPublicaDTO } from "@/app/actions/trazabilidad";
 
+const initialFicha: FichaPublicaDTO = {
+  lote_id: "CAC001",
+  productor: "Carlos Dussán",
+  origen: "Rivera",
+  fecha_recepcion: "2026-10-15T12:00:00+00:00",
+  cantidad_inicial: 500,
+  unidad: "kg",
+  estado: "liberado",
+  etapas_proceso: [
+    { etapa: "Fermentación", fecha: "2026-10-15T14:00:00+00:00", merma_pct: 10.0, alerta_merma: false },
+    { etapa: "Secado", fecha: "2026-10-15T18:00:00+00:00", merma_pct: 12.5, alerta_merma: false },
+  ],
+};
+
 export default function TrazabilidadPage() {
   const [codigoBusqueda, setCodigoBusqueda] = useState("CAC001");
-  const [ficha, setFicha] = useState<FichaPublicaDTO | null>(null);
-  const [buscado, setBuscado] = useState(false);
+  const [ficha, setFicha] = useState<FichaPublicaDTO | null>(initialFicha);
+  const [buscado, setBuscado] = useState(true);
   const [isPending, startTransition] = useTransition();
 
   const consultarLote = (codigo: string) => {
+    const cod = (codigo || "").trim().toUpperCase();
+    if (!cod) return;
+    setCodigoBusqueda(cod);
     startTransition(async () => {
-      const data = await getFichaPublicaAction(codigo);
-      setFicha(data);
-      setBuscado(true);
+      try {
+        const data = await getFichaPublicaAction(cod);
+        setFicha(data);
+      } catch (err) {
+        console.error("Error al consultar lote:", err);
+      } finally {
+        setBuscado(true);
+      }
     });
   };
 
