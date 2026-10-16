@@ -5,7 +5,7 @@
 - **Integrantes:**
   - **Brayan Gasca** — Usuario GitHub: [`BrayanRK`](https://github.com/BrayanRK) (Integrador & Lead Developer)
   - **Samuel Chantre** — Usuario GitHub: [`samuelchantre`](https://github.com/samuelchantre) (Frontend Developer)
-  - **El Verde** — Usuario GitHub: [`ladrogaverde`](https://github.com/ladrogaverde) (Backend & Database Architect)
+  - **David Laverde** — Usuario GitHub: [`ladrogaverde`](https://github.com/ladrogaverde) (Backend & Database Architect)
 - **Repositorio Central:** [https://github.com/BrayanRK/cacao-trazabilidad](https://github.com/BrayanRK/cacao-trazabilidad)
 - **Rama de Entrega:** `feature/ui-base` (y sincronizada en `main`)
 

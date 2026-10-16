@@ -1,6 +1,6 @@
-# Bitácora de Desarrollo y Uso de IA — El Verde (Backend / DB)
-**Usuario GitHub:** `ladrogaverde`  
-**Rol:** Backend Developer & Database Administrator  
+# Bitácora de Desarrollo y Uso de IA — David Laverde (Backend / DB)
+**Usuario GitHub:** [`ladrogaverde`](https://github.com/ladrogaverde)  
+**Rol:** Backend Developer & Database Architect  
 **Entorno de Trabajo:** Termux (Android) + Supabase Cloud  
 **Herramienta IA:** Claude (Modelo: Claude Sonnet) y Desarrollo Autónomo  
 
