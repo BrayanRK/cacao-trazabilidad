@@ -21,6 +21,7 @@ const initialLotes: LoteConInventario[] = [
     estado: "liberado",
     motivo_estado: null,
     cantidad_disponible: 400,
+    created_at: "2026-10-15T12:00:00+00:00",
   },
   {
     id: "CAC002",
@@ -32,6 +33,7 @@ const initialLotes: LoteConInventario[] = [
     estado: "liberado",
     motivo_estado: null,
     cantidad_disponible: 400,
+    created_at: "2026-10-15T13:30:00+00:00",
   },
   {
     id: "CAC003",
@@ -43,6 +45,7 @@ const initialLotes: LoteConInventario[] = [
     estado: "bloqueado",
     motivo_estado: "Cadmio elevado por muestreo preventivo",
     cantidad_disponible: 350,
+    created_at: "2026-10-15T15:00:00+00:00",
   },
 ];
 
