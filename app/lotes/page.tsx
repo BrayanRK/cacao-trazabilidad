@@ -351,13 +351,19 @@ export default function LotesPage() {
               </div>
 
               {/* Métricas Principales */}
-              <div className="grid grid-cols-2 gap-2 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-xs">
+              <div className="grid grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-xs">
                 <div>
                   <span className="text-[10px] text-slate-400 dark:text-slate-400 font-semibold block uppercase">Productor</span>
                   <span className="font-bold text-slate-800 dark:text-slate-100 truncate block">{lote.productor}</span>
                 </div>
                 <div>
-                  <span className="text-[10px] text-slate-400 dark:text-slate-400 font-semibold block uppercase">Saldo Disponible</span>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-400 font-semibold block uppercase">Fecha</span>
+                  <span className="font-medium text-slate-700 dark:text-slate-300 block truncate">
+                    {new Date(lote.fecha_recepcion || lote.created_at).toLocaleDateString("es-CO")}
+                  </span>
+                </div>
+                <div>
+                  <span className="text-[10px] text-slate-400 dark:text-slate-400 font-semibold block uppercase">Saldo</span>
                   <span className="font-extrabold text-emerald-600 dark:text-emerald-400 text-sm block">
                     {lote.cantidad_disponible} kg
                   </span>
@@ -411,6 +417,7 @@ export default function LotesPage() {
                 <th className="p-4">ID Lote</th>
                 <th className="p-4">Productor</th>
                 <th className="p-4">Origen</th>
+                <th className="p-4">Fecha (RF01)</th>
                 <th className="p-4">Cantidad Inicial</th>
                 <th className="p-4">Saldo Disponible (RF08)</th>
                 <th className="p-4">Estado (RF09)</th>
@@ -420,7 +427,7 @@ export default function LotesPage() {
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80 text-sm">
               {cargando ? (
                 <tr>
-                  <td colSpan={7} className="p-8 text-center text-slate-500 dark:text-slate-400">
+                  <td colSpan={8} className="p-8 text-center text-slate-500 dark:text-slate-400">
                     Cargando inventario en tiempo real desde Supabase...
                   </td>
                 </tr>
@@ -430,6 +437,9 @@ export default function LotesPage() {
                     <td className="p-4 font-extrabold text-slate-900 dark:text-white">{lote.id}</td>
                     <td className="p-4 font-medium text-slate-800 dark:text-slate-200">{lote.productor}</td>
                     <td className="p-4 text-slate-600 dark:text-slate-400">📍 {lote.origen}</td>
+                    <td className="p-4 text-slate-600 dark:text-slate-400 text-xs font-medium">
+                      {new Date(lote.fecha_recepcion || lote.created_at).toLocaleDateString("es-CO")}
+                    </td>
                     <td className="p-4 text-slate-600 dark:text-slate-400">{lote.cantidad_inicial} kg</td>
                     <td className="p-4 font-black text-emerald-600 dark:text-emerald-400 text-base">
                       {lote.cantidad_disponible} kg
