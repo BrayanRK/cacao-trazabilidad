@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useTransition } from "react";
-import { getFichaPublicaAction, FichaPublicaDTO } from "@/app/actions/trazabilidad";
+import { getFichaPublicaAction, getLoteIdsPublicAction, FichaPublicaDTO } from "@/app/actions/trazabilidad";
 
 const initialFicha: FichaPublicaDTO = {
   lote_id: "CAC001",
@@ -23,6 +23,7 @@ export default function TrazabilidadPage() {
   const [buscado, setBuscado] = useState(true);
   const [linkCopiado, setLinkCopiado] = useState(false);
   const [hostOrigin, setHostOrigin] = useState("http://192.168.1.229:3000");
+  const [listaLotes, setListaLotes] = useState<string[]>(["CAC001", "CAC002", "CAC003", "CAC004"]);
   const [isPending, startTransition] = useTransition();
 
   const consultarLote = (codigo: string) => {
@@ -47,6 +48,19 @@ export default function TrazabilidadPage() {
   };
 
   useEffect(() => {
+    getLoteIdsPublicAction().then((ids) => {
+      if (ids && ids.length > 0) {
+        setListaLotes(ids);
+        if (typeof window !== "undefined") {
+          const params = new URLSearchParams(window.location.search);
+          if (!params.get("lote")) {
+            const ultimoLote = ids[ids.length - 1];
+            consultarLote(ultimoLote);
+          }
+        }
+      }
+    });
+
     const sincronizarDesdeUrl = () => {
       if (typeof window !== "undefined") {
         const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
@@ -56,9 +70,7 @@ export default function TrazabilidadPage() {
         const loteParam = params.get("lote");
         if (loteParam) {
           consultarLote(loteParam);
-          return;
         }
-        consultarLote("CAC001");
       }
     };
 
@@ -101,7 +113,7 @@ export default function TrazabilidadPage() {
             type="text"
             value={codigoBusqueda}
             onChange={(e) => setCodigoBusqueda(e.target.value)}
-            placeholder="Ej. CAC001, CAC002, CAC003..."
+            placeholder="Ej. CAC001, CAC002, CAC003, CAC004..."
             className="flex-1 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-bold uppercase focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 dark:text-white bg-white dark:bg-slate-800"
           />
           <button
@@ -115,7 +127,7 @@ export default function TrazabilidadPage() {
 
         <div className="flex flex-wrap gap-2 pt-1 items-center">
           <span className="text-xs text-slate-400 dark:text-slate-400 font-medium">Acceso rápido:</span>
-          {["CAC001", "CAC002", "CAC003"].map((ej) => (
+          {listaLotes.map((ej) => (
             <button
               key={ej}
               type="button"
@@ -123,7 +135,11 @@ export default function TrazabilidadPage() {
                 setCodigoBusqueda(ej);
                 consultarLote(ej);
               }}
-              className="text-xs bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/80 hover:text-emerald-800 dark:hover:text-emerald-300 text-slate-700 dark:text-slate-200 font-bold px-3 py-1.5 rounded-xl transition border border-slate-200 dark:border-slate-700 min-h-[36px] active:scale-95"
+              className={`text-xs font-bold px-3 py-1.5 rounded-xl transition border min-h-[36px] active:scale-95 ${
+                ficha?.lote_id === ej
+                  ? "bg-emerald-600 text-white border-emerald-500 shadow-sm ring-2 ring-emerald-500/30"
+                  : "bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/80 hover:text-emerald-800 dark:hover:text-emerald-300 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700"
+              }`}
             >
               {ej}
             </button>

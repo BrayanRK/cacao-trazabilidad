@@ -77,3 +77,21 @@ export async function getFichaPublicaAction(loteId: string): Promise<FichaPublic
     etapas_proceso: etapas,
   };
 }
+
+/**
+ * Consulta la lista de todos los IDs de lotes para los botones de acceso rápido
+ */
+export async function getLoteIdsPublicAction(): Promise<string[]> {
+  try {
+    const supabase = getServiceSupabase();
+    const { data } = await supabase.from("lotes").select("id").order("id", { ascending: true });
+    if (!data || data.length === 0) {
+      return ["CAC001", "CAC002", "CAC003", "CAC004"];
+    }
+    return data.map((l) => l.id);
+  } catch (err) {
+    console.error("Error al obtener IDs de lotes:", err);
+    return ["CAC001", "CAC002", "CAC003", "CAC004"];
+  }
+}
+
