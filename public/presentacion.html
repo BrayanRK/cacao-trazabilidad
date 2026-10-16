@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>syntax_error — Trazabilidad del Cacao Huilense</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #0b0f17;
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      overflow: hidden;
+      user-select: none;
+    }
+    .slide {
+      display: none;
+      height: 100vh;
+      width: 100vw;
+      padding: 3rem 5rem;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    .slide.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body class="relative h-screen w-screen bg-[#0b0f17]">
+
+  <!-- Barra de Navegación Superior -->
+  <header class="absolute top-0 left-0 right-0 p-6 flex justify-between items-center z-50 border-b border-slate-800/80 bg-[#0b0f17]/90 backdrop-blur">
+    <div class="flex items-center gap-3">
+      <span class="text-xs font-black tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-700/60 px-3 py-1 rounded-full uppercase">
+        Reto Agroindustria USCO
+      </span>
+      <span class="font-extrabold text-sm text-slate-300">Equipo: <span class="text-white font-mono">syntax_error</span></span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span id="slideIndicator" class="text-xs font-bold text-slate-400 font-mono">Diapositiva 1 / 5</span>
+      <button onclick="toggleFullScreen()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-3 py-1.5 rounded-lg border border-slate-700 transition">
+        ⛶ Pantalla Completa
+      </button>
+    </div>
+  </header>
+
+  <!-- DIAPOSITIVA 1: PORTADA -->
+  <section class="slide active text-center items-center" id="slide-1">
+    <div class="max-w-4xl space-y-6">
+      <span class="inline-block px-4 py-1.5 rounded-full text-xs font-black tracking-widest uppercase bg-emerald-900/40 text-emerald-300 border border-emerald-500/30">
+        Huila: Rivera • Campoalegre • Algeciras
+      </span>
+      <h1 class="text-5xl sm:text-6xl font-black text-white tracking-tight leading-tight">
+        Trazabilidad, Control de Mermas y Calidad del Cacao
+      </h1>
+      <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+        Digitalización integral post-cosecha y certificación digital de origen para la agroindustria huilense.
+      </p>
+      
+      <div class="pt-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm">
+        <div class="bg-slate-900/80 border border-slate-800 px-6 py-4 rounded-2xl shadow-xl">
+          <p class="text-xs text-slate-500 uppercase font-bold">Equipo de Desarrollo</p>
+          <p class="text-xl font-black text-emerald-400 font-mono mt-1">syntax_error</p>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 px-6 py-4 rounded-2xl shadow-xl text-left">
+          <p class="text-xs text-slate-500 uppercase font-bold">Integrantes y Expositores</p>
+          <p class="text-sm font-bold text-white mt-1">👨‍💻 <strong>Brayan Gasca</strong> (Lead Developer & Integración)</p>
+          <p class="text-sm font-bold text-white">🎨 <strong>Samuel Chantre</strong> (Frontend & Experiencia)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIAPOSITIVA 2: PLANTEAMIENTO DEL PROBLEMA -->
+  <section class="slide" id="slide-2">
+    <div class="max-w-5xl mx-auto space-y-8 w-full">
+      <div>
+        <span class="text-xs font-bold text-red-400 uppercase tracking-wider">Diapositiva 2 • Planteamiento</span>
+        <h2 class="text-4xl font-extrabold text-white mt-1">El Dolor de la Post-Cosecha en el Huila</h2>
+        <p class="text-slate-400 text-sm mt-1">La falta de digitalización en los centros de acopio destruye el valor del grano.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-red-950/80 border border-red-800 flex items-center justify-center text-red-400 font-black text-lg">
+            1
+          </div>
+          <h3 class="text-lg font-bold text-white">Informalidad en Papel</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Recepción y control manual en cuadernos o libretas. Los registros se pierden, se borran o no permiten auditoría de la materia prima recibida.
+          </p>
+        </div>
+
+        <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-950/80 border border-amber-800 flex items-center justify-center text-amber-400 font-black text-lg">
+            2
+          </div>
+          <h3 class="text-lg font-bold text-white">Pérdidas Descontroladas</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Durante la fermentación y secado se pierde hasta el <strong>20% del peso en mermas</strong>. Nadie sabe si fue por choque térmico, deshidratación o robo.
+          </p>
+        </div>
+
+        <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-800 flex items-center justify-center text-emerald-400 font-black text-lg">
+            3
+          </div>
+          <h3 class="text-lg font-bold text-white">35% de Sobreprecio Perdido</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Sin certificación de origen, los compradores pagan el cacao a precio estándar. El campesino pierde el 35% de prima por cacao fino de aroma.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIAPOSITIVA 3: DEMOSTRACIÓN DEL SOFTWARE -->
+  <section class="slide text-center items-center" id="slide-3">
+    <div class="max-w-4xl space-y-8">
+      <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest bg-emerald-950/80 border border-emerald-700/60 px-4 py-1.5 rounded-full">
+        Diapositiva 3 • Demostración en Vivo (2 Minutos)
+      </span>
+      <h2 class="text-5xl font-black text-white tracking-tight">
+        Demostración del Software en Vivo
+      </h2>
+      <p class="text-base text-slate-400 max-w-xl mx-auto">
+        A continuación abrimos la plataforma en tiempo real para recorrer los tres pilares de la operación:
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left max-w-3xl mx-auto">
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+          <span class="text-xs font-bold text-emerald-400">Pilar 1</span>
+          <h4 class="text-sm font-bold text-white mt-1">Recepción & Calidad</h4>
+          <p class="text-[11px] text-slate-400 mt-1">Lotes de acopio, saldo real y bloqueo preventivo por calidad (RF09).</p>
+        </div>
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+          <span class="text-xs font-bold text-amber-400">Pilar 2</span>
+          <h4 class="text-sm font-bold text-white mt-1">Transformaciones</h4>
+          <p class="text-[11px] text-slate-400 mt-1">Alerta roja de merma crítica (>15%) y costeo unitario ($2.000/kg).</p>
+        </div>
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-800">
+          <span class="text-xs font-bold text-emerald-400">Pilar 3</span>
+          <h4 class="text-sm font-bold text-white mt-1">QR & Trazabilidad</h4>
+          <p class="text-[11px] text-slate-400 mt-1">Ficha pública digital escaneable con celular bajo red local.</p>
+        </div>
+      </div>
+
+      <div class="pt-4">
+        <a href="http://localhost:3000/lotes" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black px-8 py-3.5 rounded-2xl shadow-lg transition text-base active:scale-95">
+          <span>🚀</span> Abrir Sistema en Vivo (localhost:3000)
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIAPOSITIVA 4: MODELO DE NEGOCIO E IMPACTO -->
+  <section class="slide" id="slide-4">
+    <div class="max-w-5xl mx-auto space-y-8 w-full">
+      <div>
+        <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Diapositiva 4 • Viabilidad</span>
+        <h2 class="text-4xl font-extrabold text-white mt-1">Modelo de Negocio e Impacto Regional</h2>
+        <p class="text-slate-400 text-sm mt-1">Cómo la solución es sostenible técnica y financieramente.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl space-y-3">
+          <span class="text-2xl">🌱</span>
+          <h3 class="text-lg font-bold text-white">Impacto Social</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Beneficia directamente a más de <strong>300 familias cacaoteras</strong> en Rivera, Campoalegre y Algeciras, eliminando intermediarios y dignificando el precio de compra.
+          </p>
+        </div>
+
+        <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl space-y-3">
+          <span class="text-2xl">💼</span>
+          <h3 class="text-lg font-bold text-white">Monetización SaaS</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Suscripción mensual B2B para cooperativas y asociaciones cacaoteras + micro-tarifa por cada certificado QR emitido para sacos de exportación.
+          </p>
+        </div>
+
+        <div class="bg-slate-900/90 border border-slate-800 p-6 rounded-2xl space-y-3">
+          <span class="text-2xl">🛡️</span>
+          <h3 class="text-lg font-bold text-white">Confiabilidad Técnica</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Next.js App Router, Supabase PostgreSQL, autenticación Clerk y <strong>6 pruebas unitarias automáticas</strong> que certifican las fórmulas matemáticas en 40 ms.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIAPOSITIVA 5: CONCLUSIONES Y PRÓXIMOS PASOS -->
+  <section class="slide text-center items-center" id="slide-5">
+    <div class="max-w-4xl space-y-8">
+      <span class="text-xs font-bold text-slate-400 uppercase tracking-widest bg-slate-900 border border-slate-800 px-4 py-1.5 rounded-full">
+        Diapositiva 5 • Cierre Formal
+      </span>
+      <h2 class="text-5xl font-black text-white tracking-tight">
+        Conclusiones y Próximos Pasos
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-3xl mx-auto">
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl space-y-2">
+          <h4 class="text-base font-bold text-emerald-400">✓ Conclusión Clave</h4>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Demostramos que con tecnología moderna es posible transformar un centro de acopio tradicional en una operación transparente, blindando el cacao huilense frente al mercado internacional.
+          </p>
+        </div>
+        <div class="bg-slate-900/80 border border-slate-800 p-6 rounded-2xl space-y-2">
+          <h4 class="text-base font-bold text-amber-400">🚀 Próximos Pasos</h4>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Integrar sensores IoT para captura automática de temperatura y pH en los cajones de fermentación, y formalizar el piloto en campo con las cooperativas del Huila.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-6">
+        <p class="text-2xl font-black text-white tracking-tight">¡Muchas gracias, señores jurados!</p>
+        <p class="text-xs text-slate-500 mt-1 uppercase font-bold tracking-widest font-mono">Equipo syntax_error • USCO 2026</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Barra de Control Inferior -->
+  <footer class="absolute bottom-0 left-0 right-0 p-6 flex justify-between items-center z-50 border-t border-slate-800/80 bg-[#0b0f17]/90 backdrop-blur">
+    <div class="text-xs text-slate-500 font-medium">
+      Usa las teclas <kbd class="px-2 py-1 bg-slate-800 text-slate-300 rounded font-mono text-xs border border-slate-700">←</kbd> y <kbd class="px-2 py-1 bg-slate-800 text-slate-300 rounded font-mono text-xs border border-slate-700">→</kbd> para cambiar de diapositiva
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="prevSlide()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-4 py-2 rounded-xl border border-slate-700 transition">
+        ← Anterior
+      </button>
+      <button onclick="nextSlide()" class="text-xs bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2 rounded-xl transition shadow-md active:scale-95">
+        Siguiente →
+      </button>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 5;
+
+    function showSlide(index) {
+      if (index < 1) index = 1;
+      if (index > totalSlides) index = totalSlides;
+      currentSlide = index;
+
+      document.querySelectorAll('.slide').forEach((slide, idx) => {
+        slide.classList.toggle('active', idx + 1 === currentSlide);
+      });
+
+      document.getElementById('slideIndicator').innerText = `Diapositiva ${currentSlide} / ${totalSlides}`;
+    }
+
+    function nextSlide() {
+      showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      showSlide(currentSlide - 1);
+    }
+
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        prevSlide();
+      }
+    });
+  </script>
+</body>
+</html>
