@@ -65,7 +65,7 @@ flowchart LR
 *(Abres [app/lotes](http://localhost:3000/lotes))*
 > *"Aquí estamos en el módulo de recepción. Miren el panel superior: nos totaliza los kilos en bodega y los municipios activos. 
 > 
-> Miren esta innovación: implementamos el botón **Habeas Data** 👁️. Con un solo clic alternamos entre nombres protegidos (Productor A, B) y nombres reales (Don Carlos Dussán), blindando legalmente los datos de nuestros campesinos.
+> Miren esta innovación de seguridad: implementamos el control **Habeas Data (Ley 1581)** 👁️. Por normativa legal, un operario de campo solo ve identidades protegidas (Productor A, B); únicamente el rol de **Administrador (RBAC)** tiene la autorización para alternar la vista con este botón y auditar nombres reales como Don Carlos Dussán.
 > 
 > Además, si ingresa un lote con humedad indebida o plaga, aplicamos el **Bloqueo Preventivo de Calidad (RF09)**; miren cómo el lote CAC003 queda congelado con su motivo técnico, impidiendo que cualquier operario lo procese o lo mezcle por error."*
 

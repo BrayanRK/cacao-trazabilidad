@@ -60,7 +60,9 @@ export default function LotesPage() {
   const [mostrarNombresReales, setMostrarNombresReales] = useState(true);
 
   const getNombreProductor = (lote: LoteConInventario) => {
-    if (mostrarNombresReales) {
+    // Seguridad Habeas Data: Solo administradores autenticados pueden revelar nombres reales
+    const permitirReales = userRole === "admin" && mostrarNombresReales;
+    if (permitirReales) {
       const mapaReales: Record<string, string> = {
         CAC001: "Don Carlos Dussán",
         CAC002: "Doña Ana María Trujillo",
@@ -339,14 +341,27 @@ export default function LotesPage() {
         </div>
 
         <div className="flex items-center gap-2 self-end sm:self-center">
-          <button
-            type="button"
-            onClick={() => setMostrarNombresReales(!mostrarNombresReales)}
-            className="text-xs bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 transition flex items-center gap-1.5 shadow-sm active:scale-95"
-            title="Habeas Data: Alternar entre nombres certificados y modo anónimo"
-          >
-            <span>{mostrarNombresReales ? "👁️ Nombres Reales" : "🕶️ Modo Anónimo"}</span>
-          </button>
+          {userRole === "admin" ? (
+            <button
+              type="button"
+              onClick={() => setMostrarNombresReales(!mostrarNombresReales)}
+              className="text-xs bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 transition flex items-center gap-1.5 shadow-sm active:scale-95 whitespace-nowrap"
+              title="Habeas Data (Solo Administrador): Alternar entre nombres certificados y modo anónimo"
+            >
+              <span>{mostrarNombresReales ? "👁️ Nombres Reales" : "🕶️ Modo Anónimo"}</span>
+              <span className="text-[9px] bg-amber-500/20 text-amber-600 dark:text-amber-400 font-extrabold px-1.5 py-0.5 rounded border border-amber-500/30">
+                ADMIN
+              </span>
+            </button>
+          ) : (
+            <div
+              className="text-xs bg-slate-100/70 dark:bg-slate-800/50 text-slate-400 dark:text-slate-500 font-medium px-3 py-1.5 rounded-xl border border-slate-200/50 dark:border-slate-800 flex items-center gap-1.5 whitespace-nowrap cursor-not-allowed select-none"
+              title="Habeas Data: Solo el Administrador puede revelar identidades de productores (Ley 1581)"
+            >
+              <span>🕶️ Modo Anónimo</span>
+              <span className="text-[10px]">🔒 Solo Admin</span>
+            </div>
+          )}
 
           <button
             onClick={cargarLotes}
