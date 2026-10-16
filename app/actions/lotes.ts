@@ -3,6 +3,7 @@
 import { getServiceSupabase, Lote } from "@/lib/supabase";
 import { currentUser } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { validarRecepcionLote, validarPermisoCambioEstado } from "@/lib/business-rules";
 
 export interface LoteConInventario extends Lote {
   cantidad_disponible: number;
@@ -57,20 +58,13 @@ export async function recibirLoteAction(data: {
   const userEmail = user?.emailAddresses[0]?.emailAddress || "operador_anon";
   const userRole = (user?.publicMetadata?.role as string) || "operador";
 
-  // Validación RF01: Rechazar cantidades no positivas
+  // Validación RF01: Reglas de negocio centralizadas
+  const validacion = validarRecepcionLote(data);
+  if (!validacion.valido) {
+    return { success: false, error: validacion.error };
+  }
+
   const cantidad = Number(data.cantidad);
-  if (!cantidad || cantidad <= 0) {
-    return { success: false, error: "La cantidad recibida debe ser mayor a 0 kg (RF01)." };
-  }
-
-  if (!data.productor?.trim()) {
-    return { success: false, error: "El nombre del productor es obligatorio." };
-  }
-
-  if (!data.origen?.trim()) {
-    return { success: false, error: "El municipio de origen es obligatorio." };
-  }
-
   const supabase = getServiceSupabase();
 
   // Generar ID único incremental (ej. CAC004)
@@ -140,19 +134,15 @@ export async function cambiarEstadoLoteAction(data: {
   const userRole = (user?.publicMetadata?.role as string) || "operador";
   const userEmail = user?.emailAddresses[0]?.emailAddress || "desconocido";
 
-  // Control estricto de permisos (RF09)
-  if (userRole !== "admin") {
-    return {
-      success: false,
-      error: "Acción denegada: Solo el Administrador tiene autorización para cambiar estados o bloquear lotes (RF09).",
-    };
-  }
+  // Control estricto de permisos y motivo obligatorio (RF09)
+  const validacion = validarPermisoCambioEstado({
+    rolUsuario: userRole,
+    nuevoEstado: data.nuevoEstado,
+    motivo: data.motivo,
+  });
 
-  if (!data.motivo || data.motivo.trim().length < 5) {
-    return {
-      success: false,
-      error: "Es obligatorio registrar un motivo detallado para cambiar el estado (mínimo 5 caracteres).",
-    };
+  if (!validacion.valido) {
+    return { success: false, error: validacion.error };
   }
 
   const supabase = getServiceSupabase();
