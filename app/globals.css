@@ -1,22 +1,32 @@
 @import "tailwindcss";
 
-@variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
 }
 
+html.dark,
+body.dark,
 .dark {
-  --background: #090d16;
+  --background: #0b0f17;
   --foreground: #f8fafc;
 }
 
+html {
+  min-height: 100vh;
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
+}
+
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  min-height: 100vh;
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 /* Forzar legibilidad perfecta en inputs y selects según modo */

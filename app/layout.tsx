@@ -50,7 +50,7 @@ export default function RootLayout({
             }}
           />
         </head>
-        <body className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
+        <body className="min-h-screen flex flex-col transition-colors duration-150">
           <Navbar />
           <main className="flex-1 pb-16 md:pb-0">{children}</main>
           <BottomNav />
