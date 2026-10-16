@@ -182,19 +182,42 @@ export default function TransformacionesPage() {
                   <option
                     key={lote.id}
                     value={lote.id}
-                    disabled={bloqueado || lote.cantidad_disponible <= 0}
                   >
-                    {lote.id} — {lote.origen} ({lote.cantidad_disponible} kg disp.)
-                    {bloqueado ? " [BLOQUEADO]" : ""}
+                    {lote.id} — {lote.origen} ({lote.cantidad_disponible} kg disp.) {bloqueado ? "⛔ [BLOQUEADO]" : ""}
                   </option>
                 );
               })}
             </select>
             {loteSeleccionadoInfo && (
-              <p className="text-[11px] text-gray-500 mt-1">
-                Saldo actual: <strong>{loteSeleccionadoInfo.cantidad_disponible} kg</strong> | Estado:{" "}
-                <span className="font-semibold uppercase">{loteSeleccionadoInfo.estado}</span>
-              </p>
+              <div className="mt-1 space-y-1">
+                <p className="text-[11px] text-gray-700">
+                  Saldo disponible: <strong className="text-gray-900">{loteSeleccionadoInfo.cantidad_disponible} kg</strong> | Estado:{" "}
+                  <span
+                    className={`font-bold uppercase px-1.5 py-0.5 rounded text-[10px] ${
+                      loteSeleccionadoInfo.estado === "liberado"
+                        ? "bg-emerald-100 text-emerald-800"
+                        : loteSeleccionadoInfo.estado === "pendiente"
+                        ? "bg-amber-100 text-amber-800"
+                        : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {loteSeleccionadoInfo.estado}
+                  </span>
+                </p>
+
+                {loteSeleccionadoInfo.estado === "bloqueado" && (
+                  <div className="p-2.5 bg-red-50 border border-red-300 rounded-xl text-red-800 text-xs font-semibold">
+                    ⛔ <strong>Lote Bloqueado (RF09):</strong> No se puede transformar debido a:{" "}
+                    <em>{loteSeleccionadoInfo.motivo_estado || "Control preventivo de calidad"}</em>.
+                  </div>
+                )}
+
+                {loteSeleccionadoInfo.estado !== "bloqueado" && loteSeleccionadoInfo.cantidad_disponible <= 0 && (
+                  <div className="p-2.5 bg-amber-50 border border-amber-300 rounded-xl text-amber-800 text-xs font-semibold">
+                    ⚠️ <strong>Sin existencias (RF08):</strong> Este lote ya agotó su saldo disponible.
+                  </div>
+                )}
+              </div>
             )}
           </div>
 
@@ -307,10 +330,26 @@ export default function TransformacionesPage() {
           <div className="md:col-span-3 flex justify-end gap-3 pt-2">
             <button
               type="submit"
-              disabled={isPending}
-              className="bg-emerald-700 hover:bg-emerald-800 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition disabled:opacity-50 text-sm"
+              disabled={
+                isPending ||
+                loteSeleccionadoInfo?.estado === "bloqueado" ||
+                (loteSeleccionadoInfo ? loteSeleccionadoInfo.cantidad_disponible <= 0 : false)
+              }
+              className={`font-bold px-6 py-2.5 rounded-xl shadow-md transition text-sm ${
+                loteSeleccionadoInfo?.estado === "bloqueado"
+                  ? "bg-red-700 text-white cursor-not-allowed opacity-80"
+                  : loteSeleccionadoInfo && loteSeleccionadoInfo.cantidad_disponible <= 0
+                  ? "bg-amber-600 text-white cursor-not-allowed opacity-80"
+                  : "bg-emerald-700 hover:bg-emerald-800 text-white disabled:opacity-50"
+              }`}
             >
-              {isPending ? "Procesando..." : "Registrar y Descontar Inventario"}
+              {isPending
+                ? "Procesando..."
+                : loteSeleccionadoInfo?.estado === "bloqueado"
+                ? "⛔ Lote Bloqueado (No Procesable)"
+                : loteSeleccionadoInfo && loteSeleccionadoInfo.cantidad_disponible <= 0
+                ? "⚠️ Saldo Insuficiente (0 kg)"
+                : "Registrar y Descontar Inventario"}
             </button>
           </div>
         </form>
