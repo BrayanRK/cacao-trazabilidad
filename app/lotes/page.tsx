@@ -387,7 +387,7 @@ export default function LotesPage() {
                   </button>
                 )}
                 <Link
-                  href={`/trazabilidad`}
+                  href={`/trazabilidad?lote=${lote.id}`}
                   className="flex-1 min-h-[42px] text-xs bg-emerald-50 dark:bg-emerald-950/80 hover:bg-emerald-100 dark:hover:bg-emerald-900 text-emerald-800 dark:text-emerald-200 font-bold px-3 py-2 rounded-xl border border-emerald-200 dark:border-emerald-800 transition flex items-center justify-center gap-1 active:scale-95"
                 >
                   🔍 Ficha
@@ -458,7 +458,7 @@ export default function LotesPage() {
                         </button>
                       )}
                       <Link
-                        href={`/trazabilidad`}
+                        href={`/trazabilidad?lote=${lote.id}`}
                         className="text-xs bg-emerald-50 dark:bg-emerald-950/80 hover:bg-emerald-100 dark:hover:bg-emerald-900 text-emerald-800 dark:text-emerald-200 font-bold px-3 py-1.5 rounded-xl border border-emerald-200 dark:border-emerald-800 transition shadow-sm active:scale-95 inline-block"
                       >
                         🔍 Ficha

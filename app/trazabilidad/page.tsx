@@ -47,18 +47,24 @@ export default function TrazabilidadPage() {
   };
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
-      setHostOrigin(isLocal ? "http://192.168.1.229:3000" : window.location.origin);
+    const sincronizarDesdeUrl = () => {
+      if (typeof window !== "undefined") {
+        const isLocal = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+        setHostOrigin(isLocal ? "http://192.168.1.229:3000" : window.location.origin);
 
-      const params = new URLSearchParams(window.location.search);
-      const loteParam = params.get("lote");
-      if (loteParam) {
-        consultarLote(loteParam);
-        return;
+        const params = new URLSearchParams(window.location.search);
+        const loteParam = params.get("lote");
+        if (loteParam) {
+          consultarLote(loteParam);
+          return;
+        }
+        consultarLote("CAC001");
       }
-    }
-    consultarLote("CAC001");
+    };
+
+    sincronizarDesdeUrl();
+    window.addEventListener("popstate", sincronizarDesdeUrl);
+    return () => window.removeEventListener("popstate", sincronizarDesdeUrl);
   }, []);
 
   const qrUrl = `${hostOrigin}/trazabilidad?lote=${ficha?.lote_id || "CAC001"}`;
