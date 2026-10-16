@@ -15,15 +15,15 @@
 
 | Código | Entregable Oficial | Ubicación en el Repositorio | Descripción / Estado |
 |---|---|---|---|
-| **E01** | Comprensión del Problema | `documentos/E01_problema.md` *(o `CONTEXTO.md`)* | Análisis de productores en Rivera, Campoalegre y Algeciras, restricciones de calidad y mermas. |
+| **E01** | Comprensión del Problema | [`documentos/E01_problema.md`](file:///c:/dev/cacao-trazabilidad/documentos/E01_problema.md) | Análisis de productores en Rivera, Campoalegre y Algeciras, restricciones de calidad y mermas. |
 | **E02** | Requisitos y Planificación | [`documentos/E02_historias_usuario.md`](file:///c:/dev/cacao-trazabilidad/documentos/E02_historias_usuario.md) | **12 Historias de Usuario completas** con priorización MoSCoW, tareas y criterios Gherkin. |
-| **E03** | Diseño del Sistema | `supabase/schema.sql` y [`documentos/E03_diseno.md`](file:///c:/dev/cacao-trazabilidad/documentos/) | Arquitectura Next.js + Supabase + Clerk, modelo entidad-relación y flujo de trazabilidad. |
+| **E03** | Diseño del Sistema | [`documentos/E03_diseno.md`](file:///c:/dev/cacao-trazabilidad/documentos/E03_diseno.md) | Arquitectura Next.js + Supabase + Clerk, modelo entidad-relación y flujo de trazabilidad. |
 | **E04** | Código Fuente y Construcción | Repositorio raíz (`app/`, `lib/`, `components/`) | Código completo en Next.js 16 con Server Actions, PostgreSQL y control de versiones con prefijos `[IA]`. |
 | **E05** | Pruebas del Sistema | [`documentos/E05_pruebas.md`](file:///c:/dev/cacao-trazabilidad/documentos/E05_pruebas.md) & `tests/` | **15 Casos de Prueba Manuales (CP01–CP15)** + Suite nativa de **6 pruebas automatizadas (`npm test`)** pasando al 100%. |
 | **E06** | Usabilidad e Interfaz Móvil | [`components/BottomNav.tsx`](file:///c:/dev/cacao-trazabilidad/components/BottomNav.tsx) & vistas responsivas | Barra de navegación inferior móvil (`BottomNav`), tarjetas táctiles y compatibilidad móvil comprobada en Android. |
-| **E07** | Mantenimiento y Operación | [`README.md`](file:///c:/dev/cacao-trazabilidad/README.md) & bitácoras de incidentes | Correcciones de compatibilidad CORS en red local, salvaguarda de concurrencia e idempotencia. |
+| **E07** | Mantenimiento y Operación | [`documentos/E07_mantenimiento.md`](file:///c:/dev/cacao-trazabilidad/documentos/E07_mantenimiento.md) | Correcciones de compatibilidad CORS en red local, salvaguarda de concurrencia e idempotencia. |
 | **E08** | Bitácora de Inteligencia Artificial | [`documentos/E08_bitacora_ia.md`](file:///c:/dev/cacao-trazabilidad/documentos/E08_bitacora_ia.md) | **Bitácora consolidada y 3 bitácoras individuales** (`ia/brayan.md`, `ia/samuel.md`, `ia/verde.md`) con prompts, modelos y supervisión humana. |
-| **E09** | Comercialización y Piloto | `documentos/E09_comercializacion.md` | Propuesta de despliegue piloto para la asociación de productores con costeo por kilogramo trazado. |
+| **E09** | Comercialización y Piloto | [`documentos/E09_comercializacion.md`](file:///c:/dev/cacao-trazabilidad/documentos/E09_comercializacion.md) | Propuesta de despliegue piloto para la asociación de productores con costeo por kilogramo trazado. |
 
 ---
 
