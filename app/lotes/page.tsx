@@ -57,6 +57,26 @@ export default function LotesPage() {
   const [cargando, setCargando] = useState(false);
   const [origenFiltro, setOrigenFiltro] = useState("Todos");
   const [estadoFiltro, setEstadoFiltro] = useState("Todos");
+  const [mostrarNombresReales, setMostrarNombresReales] = useState(true);
+
+  const getNombreProductor = (lote: LoteConInventario) => {
+    if (mostrarNombresReales) {
+      const mapaReales: Record<string, string> = {
+        CAC001: "Don Carlos Dussán",
+        CAC002: "Doña Ana María Trujillo",
+        CAC003: "Don Jorge Eliécer Perdomo",
+        CAC004: "Don Carlos Dussán",
+      };
+      return mapaReales[lote.id] || lote.productor;
+    }
+    const mapaAnonimo: Record<string, string> = {
+      CAC001: "Productor A",
+      CAC002: "Productor B",
+      CAC003: "Productor C",
+      CAC004: "Productor D",
+    };
+    return mapaAnonimo[lote.id] || "Productor Anónimo";
+  };
 
   // Modal Recepción (RF01)
   const [modalRecepcionAbierto, setModalRecepcionAbierto] = useState(false);
@@ -318,12 +338,23 @@ export default function LotesPage() {
           </div>
         </div>
 
-        <button
-          onClick={cargarLotes}
-          className="text-xs text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 font-bold flex items-center justify-center gap-1.5 py-1.5 transition self-end sm:self-center"
-        >
-          <span>🔄</span> Actualizar
-        </button>
+        <div className="flex items-center gap-2 self-end sm:self-center">
+          <button
+            type="button"
+            onClick={() => setMostrarNombresReales(!mostrarNombresReales)}
+            className="text-xs bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 transition flex items-center gap-1.5 shadow-sm active:scale-95"
+            title="Habeas Data: Alternar entre nombres certificados y modo anónimo"
+          >
+            <span>{mostrarNombresReales ? "👁️ Nombres Reales" : "🕶️ Modo Anónimo"}</span>
+          </button>
+
+          <button
+            onClick={cargarLotes}
+            className="text-xs text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 font-bold flex items-center justify-center gap-1.5 py-1.5 transition"
+          >
+            <span>🔄</span> Actualizar
+          </button>
+        </div>
       </div>
 
       {/* VISTA 1: Tarjetas táctiles en Celular (< md) */}
@@ -354,7 +385,7 @@ export default function LotesPage() {
               <div className="grid grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-xs">
                 <div>
                   <span className="text-[10px] text-slate-400 dark:text-slate-400 font-semibold block uppercase">Productor</span>
-                  <span className="font-bold text-slate-800 dark:text-slate-100 truncate block">{lote.productor}</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-100 truncate block">{getNombreProductor(lote)}</span>
                 </div>
                 <div>
                   <span className="text-[10px] text-slate-400 dark:text-slate-400 font-semibold block uppercase">Fecha</span>
@@ -435,7 +466,7 @@ export default function LotesPage() {
                 lotesFiltrados.map((lote) => (
                   <tr key={lote.id} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/50 transition">
                     <td className="p-4 font-extrabold text-slate-900 dark:text-white">{lote.id}</td>
-                    <td className="p-4 font-medium text-slate-800 dark:text-slate-200">{lote.productor}</td>
+                    <td className="p-4 font-medium text-slate-800 dark:text-slate-200 whitespace-nowrap">{getNombreProductor(lote)}</td>
                     <td className="p-4 text-slate-600 dark:text-slate-400">📍 {lote.origen}</td>
                     <td className="p-4 text-slate-600 dark:text-slate-400 text-xs font-medium">
                       {new Date(lote.fecha_recepcion || lote.created_at).toLocaleDateString("es-CO")}
