@@ -2,9 +2,9 @@
 **Hackathon USCO 2026:** Reto Agroindustria (Trazabilidad de Cacao)  
 **Proyecto:** "Cacao con historia, calidad y valor" — Asociación Cacaotera del Huila (Rivera, Campoalegre y Algeciras)  
 **Equipo de Desarrollo:**
-- **Brayan (Lead Developer & Integrador):** Autenticación Clerk, Server Actions, Lógica de Negocio y Pruebas E2E.
-- **Samuel (Frontend Developer):** Componentes visuales, interfaz React con Tailwind CSS y navegación.
-- **El Verde (Backend Developer):** Arquitectura PostgreSQL en Supabase, DDL de tablas, semillas y contrato de datos desde Termux.
+- **Brayan ([`BrayanRK`](https://github.com/BrayanRK) - Lead Developer & Integrador):** Autenticación Clerk, Server Actions, Lógica de Negocio y Pruebas E2E.
+- **Samuel Chantre ([`samuelchantre`](https://github.com/samuelchantre) - Frontend Developer):** Componentes visuales, interfaz React con Tailwind CSS y navegación.
+- **El Verde ([`ladrogaverde`](https://github.com/ladrogaverde) - Backend Developer):** Arquitectura PostgreSQL en Supabase, DDL de tablas, semillas y contrato de datos desde Termux.
 
 ---
 
@@ -21,7 +21,7 @@ El equipo adoptó un enfoque de **desarrollo aumentado por IA**: los modelos act
 
 | Integrante | Rol | Herramienta Principal | Modelo de IA Utilizado | Entorno de Ejecución |
 |---|---|---|---|---|
-| **Samuel Bohórquez** | Frontend | Gemini (Google) | `Gemini 3.8 Flash` | PC / Cursor / VS Code |
+| **Samuel Chantre (`samuelchantre`)** | Frontend | Gemini (Google) | `Gemini 3.8 Flash` | PC / Cursor / VS Code |
 | **El Verde (`ladrogaverde`)** | Backend & DB | Claude (Anthropic) | `Claude Sonnet` | Android (Termux) + Supabase Cloud |
 | **Brayan (`BrayanRK`)** | Integrador & Lead | Asistente de Desarrollo | `Claude Opus 4.6 (Thinking)`<br>`Gemini 3.8 Flash (High)` | PC (Windows) + Node.js v24 |
 

@@ -1,4 +1,5 @@
-# Bitácora de Desarrollo y Uso de IA — Samuel Bohórquez
+# Bitácora de Desarrollo y Uso de IA — Samuel Chantre
+**Usuario GitHub:** [`samuelchantre`](https://github.com/samuelchantre)  
 **Rol:** Frontend Developer  
 **Proyecto:** Cacao Trazabilidad — Huila (Rivera, Campoalegre, Algeciras)  
 **Herramienta IA:** Gemini (Modelo: Gemini 3.8 Flash) y Desarrollo Autónomo  
