@@ -1,65 +1,56 @@
-# Entregable E08 — Bitácora Oficial de Uso de Inteligencia Artificial
+# Entregable E08 — Bitácora Consolidada de Uso de Inteligencia Artificial
 **Hackathon USCO 2026:** Reto Agroindustria (Trazabilidad de Cacao)  
-**Asociación Cacaotera del Huila:** Rivera, Campoalegre y Algeciras  
-**Equipo:** Brayan (Integrador / Lead Dev), Samuel (Frontend), Backend (Termux)  
-**Declaración Ética:** Cumplimiento estricto del reglamento oficial de transparencia en IA.  
+**Proyecto:** "Cacao con historia, calidad y valor" — Asociación Cacaotera del Huila (Rivera, Campoalegre y Algeciras)  
+**Equipo de Desarrollo:**
+- **Brayan (Lead Developer & Integrador):** Autenticación Clerk, Server Actions, Lógica de Negocio y Pruebas E2E.
+- **Samuel (Frontend Developer):** Componentes visuales, interfaz React con Tailwind CSS y navegación.
+- **El Verde (Backend Developer):** Arquitectura PostgreSQL en Supabase, DDL de tablas, semillas y contrato de datos desde Termux.
 
 ---
 
-## 1. Política de Uso y Transparencia
+## 1. Declaración Ética y Cumplimiento del Reglamento
 
-De acuerdo con el reglamento oficial del evento:
+En conformidad con las bases oficiales del Hackathon USCO:
 > *"Toda ayuda de la IA se declara (herramienta, modelo, propósito, componente generado, revisión humana y correcciones). El equipo debe entender y poder explicar todo el código generado."*
 
-El equipo utilizó herramientas de Inteligencia Artificial como **asistente de programación en pares (pair programming)** y acelerador de desarrollo. La arquitectura, toma de decisiones, requerimientos del cliente, lógica de negocio y supervisión de seguridad fueron conducidas 100% por el equipo humano.
+El equipo adoptó un enfoque de **desarrollo aumentado por IA**: los modelos actuaron como asistentes de programación guiados por instrucciones, arquitectura y criterios técnicos definidos por el equipo humano. Cada línea de código generada fue inspeccionada, probada y adaptada a las reglas agroindustriales del reto.
 
 ---
 
-## 2. Herramientas y Modelos Utilizados
+## 2. Modelos y Herramientas por Integrante
 
-| Herramienta / Plataforma | Modelos Utilizados | Rol y Propósito en el Proyecto |
-|---|---|---|
-| **Google Antigravity (AGY)** | `Claude Opus 4.6 (Thinking)`<br>`Gemini 3.8 Flash (High)` | Integración continua, arquitectura de Server Actions, diseño de pruebas automatizadas y soporte de compilación en Next.js 16. |
-| **Cursor / VS Code AI** | Modelos LLM de autocompletado | Maquetación visual de componentes Tailwind en frontend. |
-
----
-
-## 3. Matriz de Interacciones y Componentes Generados
-
-| Sesión / Hito | Propósito | Prompt del Humano (Brayan) | Componente Generado por IA | Revisión Humana y Corrección Aplicada |
-|:---:|---|---|---|---|
-| **Hito 1 (Hora 2)** | Configuración de Autenticación con Roles | *"Configura Clerk en el layout y middleware para que tengamos roles de operador y admin"* | `app/layout.tsx`<br>`middleware.ts` | **Corrección humana:** En Clerk Core 3 (`@clerk/nextjs` v7.9), las etiquetas `<SignedIn>` cambiaron. Se ajustó el consumo a hooks `useUser()` nativos para evitar parpadeos de renderizado. |
-| **Hito 2 (Hora 4)** | Conexión a Base de Datos en la Nube | *"Configura el cliente de Supabase y las Server Actions para consultar y recibir lotes con balance real"* | `lib/supabase.ts`<br>`app/actions/lotes.ts` | **Corrección humana:** Se detectó que el balance no debía ser una cifra fija, sino calculado dinámicamente sumando recepciones y restando consumos desde `inventario_movimientos` (RF08). |
-| **Hito 3 (Hora 6)** | Pruebas Automatizadas Oficiales (E05) | *"Crea las 5 pruebas automatizadas que pide el entregable E05 para merma, costos, validación e inventario"* | `lib/business-rules.ts`<br>`tests/business-rules.test.ts` | **Corrección humana:** Para evitar instalar dependencias pesadas (Jest/Vitest), se utilizó el test runner nativo de Node.js v24 (`node:test`). Se ajustó `tsconfig.json` con `allowImportingTsExtensions: true` para compatibilidad limpia. |
-| **Hito 4 (Hora 7)** | Módulo de Transformaciones Atómicas | *"Implementa la Server Action de transformaciones con cálculo de mermas, alertas >15% y descuento de stock"* | `app/actions/transformaciones.ts` | **Corrección humana:** Se agregó la validación estricta de que un lote con estado `"bloqueado"` no puede ser transformado, previniendo errores durante la simulación de la Hora 12. |
-| **Hito 5 (Hora 8)** | Integración del Frontend del Equipo | *"Integra las pantallas de Samuel con nuestras Server Actions reales de Supabase"* | `app/navbar.tsx`<br>`app/lotes/page.tsx`<br>`app/transformaciones/page.tsx`<br>`app/trazabilidad/page.tsx` | **Corrección humana:** Se corrigió un error donde Samuel había sobreescrito accidentalmente `app/lotes/page.tsx` con el código del Navbar; se restauró la vista real y se conectó al modal con Server Actions. |
+| Integrante | Rol | Herramienta Principal | Modelo de IA Utilizado | Entorno de Ejecución |
+|---|---|---|---|---|
+| **Samuel Bohórquez** | Frontend | Gemini (Google) | `Gemini 3.8 Flash` | PC / Cursor / VS Code |
+| **El Verde (`ladrogaverde`)** | Backend & DB | Claude (Anthropic) | `Claude Sonnet` | Android (Termux) + Supabase Cloud |
+| **Brayan (`BrayanRK`)** | Integrador & Lead | Asistente de Desarrollo | `Claude Opus 4.6 (Thinking)`<br>`Gemini 3.8 Flash (High)` | PC (Windows) + Node.js v24 |
 
 ---
 
-## 4. Guía de Defensa Técnica ante el Jurado (Para Brayan)
+## 3. Matriz Consolidada de Generación y Supervisión Humana
 
-Durante la sustentación o el recorrido del jurado por el stand, se esperan preguntas sobre la implementación. A continuación se detallan los conceptos que el equipo domina:
-
-### Pregunta 1: *"¿Cómo calculan la merma y cómo evitan falsos positivos en las alertas?"*
-> **Respuesta:**  
-> Usamos la fórmula oficial del sector cacaotero:  
-> $$\text{Merma (\%)} = \left(\frac{\text{Peso Entrada} - \text{Peso Salida}}{\text{Peso Entrada}}\right) \times 100$$  
-> Si el resultado es estrictamente mayor al **15.0%**, el sistema bloquea el guardado a menos que el operario registre una justificación técnica en el campo `incidencia`. Si la salida es mayor a la entrada, el sistema detecta una anomalía física y rechaza el registro.
-
-### Pregunta 2: *"¿Cómo aseguran que dos operarios no consuman el mismo lote al mismo tiempo (doble consumo)?"*
-> **Respuesta:**  
-> En la base de datos registramos cada consumo en la tabla `inventario_movimientos`. Antes de autorizar la transformación, calculamos el saldo real disponible:
-> $$\text{Saldo} = \sum \text{Recepciones} - \sum \text{Consumos}$$
-> Además, implementamos **idempotencia** mediante `idempotency_key` única: si una petición se reenvía por problemas de red, la transacción reconoce la clave y no duplica el descuento de existencias.
-
-### Pregunta 3: *"¿Qué pasa en la simulación de la Hora 12 si hay que bloquear el lote CAC001?"*
-> **Respuesta:**  
-> Solo un usuario con rol `admin` en Clerk puede cambiar el estado a `"bloqueado"` exigiendo un motivo técnico (mínimo 5 caracteres). Al bloquearse:
-> 1. Queda registrado en la tabla inmutable `auditoria_logs`.
-> 2. Se inhabilita automáticamente en el selector de transformaciones para impedir nuevos procesamientos.
-> 3. En la ficha pública (`/trazabilidad`) aparece una alerta destacada en rojo informando el bloqueo, **sin revelar costos internos de la asociación** para cumplir con la privacidad del comprador (RF06).
+| Integrante | Componente Afectado | Propósito / Aporte de la IA | Supervisión y Corrección Humana |
+|---|---|---|---|
+| **Samuel** | `app/lotes/page.tsx`<br>`app/navbar.tsx` | Maquetación visual con Tailwind CSS, estructura de tablas y modales de captura. | **Samuel:** Diseño de paleta de colores Huila (verde esmeralda), creación autónoma del Navbar y validación de estados de React. |
+| **El Verde** | `supabase/schema.sql`<br>`supabase/seed.sql`<br>`contrato.md` | Estructuración del esquema SQL relacional para lotes, transformaciones, inventario y vistas seguras. | **El Verde:** Ejecución manual en Supabase SQL Editor desde móvil, corrección de checks de masa ($> 0$), relaciones foráneas y llaves de acceso. |
+| **Brayan** | `lib/supabase.ts`<br>`app/actions/lotes.ts`<br>`app/actions/transformaciones.ts` | Creación de Server Actions con balance de inventario dinámico, descuento de masas y registro en auditoría. | **Brayan:** Corrección del cálculo de saldo disponible (suma de recepciones menos consumos) y bloqueo de transformación si el lote está bloqueado (Hora 12). |
+| **Brayan** | `lib/business-rules.ts`<br>`tests/business-rules.test.ts` | Lógica pura de cálculo de merma ($> 15\%$), costeo unitario ($20.000\text{ COP/kg}$), márgenes (20%) y 5 pruebas automatizadas (E05). | **Brayan:** Configuración de compatibilidad con el test runner nativo de Node.js v24 (`node:test`) sin necesidad de librerías externas pesadas. |
+| **Equipo** | Integración Global | Resolución de colisiones de ramas entre frontend, backend y capa de autenticación. | **Brayan & Equipo:** Sincronización de ramas Git, ensamble del layout global y verificación funcional completa en `localhost:3000`. |
 
 ---
 
-## 5. Declaración de Dominio
-El equipo certifica que comprende en su totalidad la arquitectura implementada, la estructura de base de datos en Supabase, las Server Actions de Next.js y el flujo de ejecución de las pruebas automatizadas.
+## 4. Bitácoras Detalladas por Desarrollador
+
+Para consultar el registro cronológico paso a paso de cada integrante, remitirse a los archivos individuales:
+- [Bitácora de Brayan (Integrador)](file:///c:/dev/cacao-trazabilidad/documentos/ia/brayan.md)
+- [Bitácora de Samuel (Frontend)](file:///c:/dev/cacao-trazabilidad/documentos/ia/samuel.md)
+- [Bitácora de El Verde (Backend)](file:///c:/dev/cacao-trazabilidad/documentos/ia/verde.md)
+
+---
+
+## 5. Preparación para la Defensa Técnica ante el Jurado
+
+El equipo preparó y domina los 3 puntos neurálgicos que el jurado evaluará:
+1. **Control Físico de Mermas (RF04):** Justificación técnica obligatoria si la merma supera el umbral del **15.0%** y detección de inconsistencias físicas ($Salida > Entrada$).
+2. **Concurrencia e Inventario (RF08):** Prevención de doble consumo mediante claves de idempotencia (`idempotency_key`) y cálculo de saldos en tiempo real.
+3. **Escenario de Contingencia (Hora 12 / RF09):** Aislamiento inmediato de lotes bloqueados (`CAC001`) con trazabilidad completa para el consumidor sin filtración de datos de costos de la asociación (RF06).
