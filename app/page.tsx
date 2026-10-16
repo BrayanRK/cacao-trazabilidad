@@ -1,11 +1,28 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useUser, SignInButton, UserButton } from "@clerk/nextjs";
+import { getLotesAction, LoteConInventario } from "@/app/actions/lotes";
+import Link from "next/link";
 
 export default function HomePage() {
   const { isLoaded, isSignedIn, user } = useUser();
   const role = (user?.publicMetadata?.role as string) || "operador";
   const userEmail = user?.primaryEmailAddress?.emailAddress;
+
+  const [lotes, setLotes] = useState<LoteConInventario[]>([]);
+  const [cargando, setCargando] = useState(true);
+
+  useEffect(() => {
+    getLotesAction()
+      .then((data) => {
+        setLotes(data);
+      })
+      .catch((err) => console.error("Error al cargar lotes:", err))
+      .finally(() => setCargando(false));
+  }, []);
+
+  const totalKilos = lotes.reduce((acc, l) => acc + Number(l.cantidad_disponible || l.cantidad_inicial), 0);
 
   return (
     <div className="min-h-screen bg-stone-100 text-stone-900 font-sans">
@@ -54,9 +71,14 @@ export default function HomePage() {
         <section className="bg-white rounded-xl p-6 shadow-sm border border-stone-200">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-amber-100 text-amber-800 mb-2">
-                Tarea 1: Autenticación con Clerk
-              </span>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-emerald-100 text-emerald-800">
+                  Base de Datos Supabase Conectada
+                </span>
+                <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide bg-amber-100 text-amber-800">
+                  Clerk Auth Activo
+                </span>
+              </div>
               <h2 className="text-2xl font-bold text-stone-900">
                 Panel de Control de Trazabilidad
               </h2>
@@ -73,82 +95,112 @@ export default function HomePage() {
             </div>
 
             <div className="flex flex-wrap gap-2">
-              <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                ● Sesión activa en Clerk
-              </span>
-              <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                ● Middleware activo
-              </span>
+              <Link
+                href="/lotes"
+                className="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-4 py-2 rounded-lg shadow transition flex items-center gap-1.5"
+              >
+                📦 Módulo de Lotes →
+              </Link>
             </div>
           </div>
         </section>
 
-        {/* Tarjetas de Resumen de Inventario Base (Datos del Hackathon) */}
+        {/* Tarjetas de Resumen en Tiempo Real desde Supabase */}
         <section className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           <div className="bg-white rounded-xl p-5 shadow-sm border border-stone-200">
             <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
-              Lote CAC001 (Rivera)
+              Total Cacao en Bodega
             </p>
-            <p className="text-2xl font-bold text-stone-900 mt-1">100 kg</p>
-            <div className="mt-3 flex items-center justify-between text-xs">
-              <span className="text-stone-500">Productor A</span>
-              <span className="px-2 py-0.5 rounded-full font-medium bg-emerald-100 text-emerald-800">
-                Liberado
-              </span>
-            </div>
+            <p className="text-3xl font-extrabold text-stone-900 mt-1">
+              {cargando ? "..." : `${totalKilos} kg`}
+            </p>
+            <p className="text-xs text-stone-500 mt-2">
+              Existencia real consolidada (RF08)
+            </p>
           </div>
 
           <div className="bg-white rounded-xl p-5 shadow-sm border border-stone-200">
             <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
-              Lote CAC002 (Campoalegre)
+              Lotes Registrados
             </p>
-            <p className="text-2xl font-bold text-stone-900 mt-1">150 kg</p>
-            <div className="mt-3 flex items-center justify-between text-xs">
-              <span className="text-stone-500">Productor B</span>
-              <span className="px-2 py-0.5 rounded-full font-medium bg-amber-100 text-amber-800">
-                Pendiente
-              </span>
-            </div>
+            <p className="text-3xl font-extrabold text-stone-900 mt-1">
+              {cargando ? "..." : lotes.length}
+            </p>
+            <p className="text-xs text-stone-500 mt-2">
+              Almacenados en PostgreSQL (RF07)
+            </p>
           </div>
 
           <div className="bg-white rounded-xl p-5 shadow-sm border border-stone-200">
             <p className="text-xs font-semibold text-stone-500 uppercase tracking-wide">
-              Lote CAC003 (Algeciras)
+              Estado de Seguridad
             </p>
-            <p className="text-2xl font-bold text-stone-900 mt-1">80 kg</p>
-            <div className="mt-3 flex items-center justify-between text-xs">
-              <span className="text-stone-500">Productor C</span>
-              <span className="px-2 py-0.5 rounded-full font-medium bg-red-100 text-red-800">
-                Bloqueado
-              </span>
-            </div>
+            <p className="text-xl font-bold text-emerald-700 mt-1">
+              RLS + Auditoría Activa
+            </p>
+            <p className="text-xs text-stone-500 mt-2">
+              Historial inmutable de cambios (RF10)
+            </p>
           </div>
         </section>
 
-        {/* Guía rápida de Verificación para Jurados */}
-        <section className="bg-stone-900 text-stone-200 rounded-xl p-6 shadow-md border border-stone-800">
-          <h3 className="text-base font-bold text-amber-300 uppercase tracking-wide">
-            Prueba de Roles para el Jurado
-          </h3>
-          <p className="text-xs text-stone-400 mt-1">
-            En Clerk puedes asignar los roles en los metadatos públicos de cada usuario:
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 text-xs font-mono">
-            <div className="bg-stone-950 p-3 rounded-lg border border-stone-800">
-              <span className="text-blue-400 font-bold block mb-1">Rol: Operador</span>
-              <code>&#123; &quot;role&quot;: &quot;operador&quot; &#125;</code>
-              <p className="text-stone-500 font-sans mt-2">
-                Permite: Recepción (RF01), Transformación (RF02) e Inventario (RF08).
-              </p>
-            </div>
-            <div className="bg-stone-950 p-3 rounded-lg border border-stone-800">
-              <span className="text-amber-400 font-bold block mb-1">Rol: Administrador</span>
-              <code>&#123; &quot;role&quot;: &quot;admin&quot; &#125;</code>
-              <p className="text-stone-500 font-sans mt-2">
-                Permite: Liberar/Bloquear (RF09), Costos (RF05), Auditoría (RF10) y CSV (RF11).
-              </p>
-            </div>
+        {/* Lista de Lotes Leída en Vivo desde Postgres */}
+        <section className="bg-white rounded-xl p-6 shadow-sm border border-stone-200">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold text-stone-900">
+              Lotes Activos en Base de Datos (Supabase)
+            </h3>
+            <span className="text-xs text-stone-500">
+              Datos persistentes en la nube
+            </span>
           </div>
+
+          {cargando ? (
+            <div className="p-8 text-center text-stone-400 text-sm">
+              Consultando base de datos en Supabase...
+            </div>
+          ) : lotes.length === 0 ? (
+            <div className="p-8 text-center text-stone-400 text-sm">
+              No hay lotes registrados aún.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {lotes.map((lote) => (
+                <div
+                  key={lote.id}
+                  className="p-4 rounded-lg border border-stone-200 bg-stone-50 flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono font-bold text-base text-stone-900">
+                        {lote.id}
+                      </span>
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                          lote.estado === "liberado"
+                            ? "bg-emerald-100 text-emerald-800"
+                            : lote.estado === "bloqueado"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-amber-100 text-amber-800"
+                        }`}
+                      >
+                        {lote.estado.toUpperCase()}
+                      </span>
+                    </div>
+                    <p className="text-xs text-stone-600 mt-1">
+                      <strong>Origen:</strong> {lote.origen} • {lote.productor}
+                    </p>
+                  </div>
+                  <div className="mt-3 pt-2 border-t border-stone-200 flex justify-between items-center text-xs">
+                    <span className="text-stone-500">Disponible:</span>
+                    <span className="font-bold text-stone-900">
+                      {lote.cantidad_disponible} kg
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </section>
       </main>
     </div>
